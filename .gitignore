@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# macOS
+.DS_Store
+
+# Environment / secrets
+.env
+.env.*
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Large datasets
+data/PlantVillage/
+data/raw/
+data/datasets/
+
+# Trained model files
+models/*.pth
+models/*.pt
+models/*.onnx
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp

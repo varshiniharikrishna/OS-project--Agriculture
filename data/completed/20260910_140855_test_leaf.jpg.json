@@ -1,0 +1,13 @@
+{
+  "filename": "20260910_140855_test_leaf.jpg",
+  "original_name": "test_leaf.jpg",
+  "timestamp": "2026-09-10 14:08:55",
+  "status": "completed",
+  "crop": "Grape",
+  "device_id": "Edge-Camera-01",
+  "file_size_bytes": 1413,
+  "disease_prediction": "Black rot",
+  "confidence": 78.5,
+  "severity": "Moderate",
+  "last_updated": "2026-09-10 14:08:55"
+}

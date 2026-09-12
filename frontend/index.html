@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgriEdge Intelligence OS — Context-Aware Resource Orchestration</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <i class="fa-solid fa-leaf" style="color: #2e7d32;"></i>
+        <span data-i18n="nav_title">AgriEdge OS</span>
+      </div>
+      <div class="sidebar-subtitle" data-i18n="nav_subtitle">Resource Orchestration System</div>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li class="active"><a href="#section-dashboard" onclick="showSection('dashboard')"><i class="fa-solid fa-chart-pie"></i> <span data-i18n="nav_dashboard">Dashboard Overview</span></a></li>
+      <li><a href="#section-detection" onclick="showSection('detection')"><i class="fa-solid fa-microscope"></i> <span data-i18n="nav_detection">Crop Disease Detection</span></a></li>
+      <li><a href="#section-assistant" onclick="showSection('assistant')"><i class="fa-solid fa-hand-holding-hand"></i> <span data-i18n="nav_assistant">Farmer Assistance</span></a></li>
+      <li><a href="#section-scheduler" onclick="showSection('scheduler')"><i class="fa-solid fa-network-wired"></i> <span data-i18n="nav_scheduler">Resource Scheduler</span></a></li>
+      <li><a href="#section-resources" onclick="showSection('resources')"><i class="fa-solid fa-microchip"></i> <span data-i18n="nav_resources">Resource & Weather Monitor</span></a></li>
+      <li><a href="#section-comparison" onclick="showSection('comparison')"><i class="fa-solid fa-scale-balanced"></i> <span data-i18n="nav_comparison">Scheduler Comparison</span></a></li>
+      <li><a href="#section-files" onclick="showSection('files')"><i class="fa-solid fa-folder-tree"></i> <span data-i18n="nav_files">File Storage Management</span></a></li>
+      <li><a href="#section-technical" onclick="showSection('technical')"><i class="fa-solid fa-code"></i> <span data-i18n="nav_technical">Technical Details</span></a></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div><strong>Project Authors:</strong></div>
+      <div>Varshini Harikrishna (24BCE0780)</div>
+      <div>Naurin Shabeer (24BCE0772)</div>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <div class="main-wrapper">
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="header-title-area">
+        <h2 id="current-section-title">Dashboard Overview</h2>
+      </div>
+
+      <div class="header-controls">
+        <!-- Online/Offline Connectivity Toggle -->
+        <div id="connection-status-badge" class="status-badge status-offline" onclick="toggleConnectivity()">
+          <span class="dot"></span>
+          <span id="connectivity-label">Offline (Store-and-Forward)</span>
+        </div>
+
+        <!-- Multilingual Language Selector Dropdown -->
+        <div class="language-selector">
+          <i class="fa-solid fa-globe" style="color: #6c757d; margin-right: 4px;"></i>
+          <select id="language-dropdown" onchange="changeLanguage(this.value)">
+            <option value="en" selected>English</option>
+            <option value="ta">Tamil (தமிழ்)</option>
+            <option value="hi">Hindi (हिन्दी)</option>
+            <option value="te">Telugu (తెలుగు)</option>
+            <option value="kn">Kannada (ಕನ್ನಡ)</option>
+            <option value="ml">Malayalam (മലയാളം)</option>
+            <option value="bn">Bengali (বাংলা)</option>
+            <option value="mr">Marathi (मराठी)</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="content-container">
+
+      <!-- SECTION 1: DASHBOARD OVERVIEW -->
+      <section id="section-dashboard" class="page-section active">
+        <div class="section-title"><i class="fa-solid fa-chart-line"></i> Summary Statistics</div>
+
+        <div class="metrics-grid">
+          <div class="card stat-card">
+            <div class="stat-icon icon-blue"><i class="fa-solid fa-images"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-total">0</div>
+              <div class="stat-label">Total Images Analyzed</div>
+            </div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-icon icon-green"><i class="fa-solid fa-seedling"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-healthy">0</div>
+              <div class="stat-label">Healthy Crops</div>
+            </div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-icon icon-orange"><i class="fa-solid fa-bug"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-diseased">0</div>
+              <div class="stat-label">Diseased Crops</div>
+            </div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-icon icon-red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-critical">0</div>
+              <div class="stat-label">Critical Cases</div>
+            </div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-icon icon-blue"><i class="fa-solid fa-check-double"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-confidence">0%</div>
+              <div class="stat-label">Avg Confidence</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2col">
+          <!-- Recent Disease Scans Table -->
+          <div class="card">
+            <h3 style="margin-bottom: 15px; font-size: 1.1rem;"><i class="fa-solid fa-clock-rotate-left"></i> Recent Disease Diagnostics</h3>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>Crop</th>
+                    <th>Predicted Condition</th>
+                    <th>Confidence</th>
+                    <th>Severity</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-scans-tbody">
+                  <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Loading scans...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Environmental Context Card -->
+          <div class="card">
+            <h3 style="margin-bottom: 15px; font-size: 1.1rem;"><i class="fa-solid fa-cloud-sun-rain"></i> Climate & Risk Context</h3>
+            <div class="result-grid-details" style="grid-template-columns: repeat(2, 1fr);">
+              <div class="detail-item">
+                <div class="detail-label" data-i18n="weather_temp">Temperature</div>
+                <div class="detail-value" id="dash-weather-temp">29.5 °C</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label" data-i18n="weather_humidity">Humidity</div>
+                <div class="detail-value" id="dash-weather-humidity">82 %</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label" data-i18n="weather_rain">Rain Probability</div>
+                <div class="detail-value" id="dash-weather-rain">65 %</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label" data-i18n="weather_risk">Fungal Risk Index</div>
+                <div class="detail-value" id="dash-weather-risk" style="color: #d32f2f; font-weight: 800;">HIGH RISK</div>
+              </div>
+            </div>
+            <div style="background: var(--primary-light); padding: 12px; border-radius: 6px; margin-top: 15px; font-size: 0.85rem;">
+              <i class="fa-solid fa-circle-info" style="color: var(--primary-color);"></i>
+              <strong>OS Scheduling Impact:</strong> High humidity & rain probability elevate priority weight ($w_{\text{weather}} = 0.15$) for Leaf Disease Inference & Irrigation Check tasks.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: CROP DISEASE DETECTION -->
+      <section id="section-detection" class="page-section">
+        <div class="section-title"><i class="fa-solid fa-leaf"></i> Crop Disease Detection (Core Feature)</div>
+
+        <div class="grid-2col">
+          <!-- Upload Area -->
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <h3 style="font-size: 1.1rem;">Upload Plant Leaf Image</h3>
+              <span class="model-badge"><i class="fa-solid fa-brain"></i> <span data-i18n="label_ai_model">AI Model: EfficientNet-B0</span></span>
+            </div>
+
+            <div class="upload-dropzone" onclick="document.getElementById('leaf-image-input').click()">
+              <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+              <div class="upload-title" data-i18n="btn_upload_image">Click or Drag & Drop Leaf Image</div>
+              <div class="upload-desc">Supports PNG, JPG, JPEG formats (PlantVillage Dataset)</div>
+              <input type="file" id="leaf-image-input" class="file-input-hidden" accept="image/*" onchange="handleFileSelect(event)">
+            </div>
+
+            <div id="image-preview-box" style="display: none; margin-top: 15px; text-align: center;">
+              <img id="preview-img" src="" alt="Leaf Preview" style="max-height: 220px; border-radius: 8px; border: 1px solid var(--border-color);">
+            </div>
+
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+              <button class="btn btn-primary" onclick="submitLeafImage()" id="analyze-btn">
+                <i class="fa-solid fa-magnifying-glass"></i> <span data-i18n="btn_analyze">Analyze Crop Disease</span>
+              </button>
+              <button class="btn btn-outline" onclick="loadSampleImage('tomato_early_blight')">
+                <i class="fa-solid fa-flask"></i> Load Sample Leaf
+              </button>
+            </div>
+
+            <div style="margin-top: 20px; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 12px;">
+              <i class="fa-solid fa-database"></i> <strong data-i18n="label_supported_classes">Supported Crop Classes:</strong>
+              Tomato, Potato, Maize, Rice, Cotton, Apple, Grape, Pepper, Wheat (38 PlantVillage Categories).
+            </div>
+          </div>
+
+          <!-- Result Card -->
+          <div class="card result-card" id="result-card-container">
+            <div class="result-header">
+              <div>
+                <div class="detail-label" data-i18n="label_crop_detected">Crop Detected</div>
+                <div class="result-crop-name" id="res-crop-name">Tomato</div>
+              </div>
+              <div id="res-severity-badge" class="severity-badge severity-moderate">Moderate Severity</div>
+            </div>
+
+            <div class="result-grid-details">
+              <div class="detail-item">
+                <div class="detail-label" data-i18n="label_condition">Disease Condition</div>
+                <div class="detail-value" id="res-disease-name">Early Blight (Alternaria solani)</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label" data-i18n="label_confidence">Confidence</div>
+                <div class="detail-value" id="res-confidence">94.2 %</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label" data-i18n="label_status">Plant Status</div>
+                <div class="detail-value" id="res-status-text" style="color: #e65100;">Diseased Leaf</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Model Architecture</div>
+                <div class="detail-value" id="res-model-used">EfficientNet-B0</div>
+              </div>
+            </div>
+
+            <div style="margin-top: 10px;">
+              <div class="detail-label" data-i18n="label_explanation">Diagnosis Explanation</div>
+              <p id="res-explanation" style="font-size: 0.88rem; margin-top: 4px; color: var(--text-main);">
+                Early blight produces dark target-like concentric rings on mature leaves, causing yellowing and premature leaf drop.
+              </p>
+            </div>
+
+            <!-- Controlled Recommendations Box -->
+            <div class="recommendations-box">
+              <h4 data-i18n="label_next_steps"><i class="fa-solid fa-list-check"></i> Recommended Next Steps</h4>
+              <ul id="res-actions-ul">
+                <li>Prune infected lower leaves to restrict fungal spore splash.</li>
+                <li>Apply copper-based fungicide or Mancozeb at 7-10 day intervals.</li>
+                <li>Avoid overhead sprinkler irrigation; water directly near plant roots.</li>
+              </ul>
+            </div>
+
+            <div class="recommendations-box" style="background-color: #e1f5fe; border-left-color: #0288d1; margin-top: 10px;">
+              <h4 data-i18n="label_prevention" style="color: #01579b;"><i class="fa-solid fa-shield-halved"></i> Prevention & Care Tips</h4>
+              <ul id="res-prevention-ul">
+                <li>Rotate crops with non-solanaceous crops every 2-3 years.</li>
+                <li>Apply organic mulch around bases to prevent soil splashing.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: FARMER ASSISTANCE PANEL -->
+      <section id="section-assistant" class="page-section">
+        <div class="section-title"><i class="fa-solid fa-user-doctor"></i> Farmer Assistance Panel (Controlled Knowledge Base)</div>
+
+        <div class="card">
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">
+            Integrated offline farmer support panel. Ask questions regarding disease control, irrigation, fertilizers, or livestock safety. Answers come from a verified agricultural knowledge base.
+          </p>
+
+          <!-- Quick Question Chip Shortcuts -->
+          <div class="chip-container">
+            <div class="chip" onclick="askQuickQuestion('What should I do after detecting this disease?')">What should I do after detecting this disease?</div>
+            <div class="chip" onclick="askQuickQuestion('How often should I water this crop?')">How often should I water this crop?</div>
+            <div class="chip" onclick="askQuickQuestion('What fertilizer is suitable?')">What fertilizer is suitable?</div>
+            <div class="chip" onclick="askQuickQuestion('How can I prevent this disease from spreading?')">How can I prevent disease spread?</div>
+            <div class="chip" onclick="askQuickQuestion('Will rain increase the disease risk?')">Will rain increase disease risk?</div>
+            <div class="chip" onclick="askQuickQuestion('Is this treatment safe for my animals?')">Is this safe for livestock?</div>
+          </div>
+
+          <!-- Chat Conversation Window -->
+          <div class="chat-box" id="assistant-chat-box">
+            <div class="chat-message assistant">
+              <div class="msg-category">System Assistant</div>
+              <div class="msg-bubble">
+                Welcome! I am your offline agricultural assistant. Ask any question regarding crop care, watering schedules, or disease management.
+              </div>
+            </div>
+          </div>
+
+          <!-- Input Bar -->
+          <div style="display: flex; gap: 10px;">
+            <input type="text" id="assistant-input" style="flex: 1; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.9rem;" placeholder="Type your farming question here..." onkeypress="handleAssistantKeyPress(event)">
+            <button class="btn btn-primary" onclick="sendFarmerQuery()"><i class="fa-solid fa-paper-plane"></i> Ask</button>
+            <button class="btn btn-outline" title="Speech-to-Text Integration Hook" onclick="alert('Speech-to-Text microphone input hook initialized for edge devices.')"><i class="fa-solid fa-microphone"></i></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: RESOURCE MONITOR & WEATHER -->
+      <section id="section-resources" class="page-section">
+        <div class="section-title"><i class="fa-solid fa-microchip"></i> Resource Management & Environmental Monitor</div>
+
+        <div class="metrics-grid">
+          <!-- CPU Gauge -->
+          <div class="card">
+            <div class="detail-label" data-i18n="res_cpu">CPU Utilization</div>
+            <div class="stat-value" id="res-val-cpu" style="margin: 8px 0;">34.2 %</div>
+            <div class="progress-bar-bg"><div id="res-bar-cpu" class="progress-bar-fill" style="width: 34.2%;"></div></div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Quad-Core ARM Cortex-A72</div>
+          </div>
+
+          <!-- RAM Gauge -->
+          <div class="card">
+            <div class="detail-label" data-i18n="res_ram">RAM Usage</div>
+            <div class="stat-value" id="res-val-ram" style="margin: 8px 0;">225 MB / 512 MB</div>
+            <div class="progress-bar-bg"><div id="res-bar-ram" class="progress-bar-fill" style="width: 44%; background-color: var(--secondary-color);"></div></div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Active LRU Eviction Manager</div>
+          </div>
+
+          <!-- Storage Gauge -->
+          <div class="card">
+            <div class="detail-label" data-i18n="res_storage">Local Storage</div>
+            <div class="stat-value" id="res-val-storage" style="margin: 8px 0;">18.5 MB / 1024 MB</div>
+            <div class="progress-bar-bg"><div id="res-bar-storage" class="progress-bar-fill" style="width: 1.8%; background-color: #ef6c00;"></div></div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">5 Hierarchy Directories</div>
+          </div>
+
+          <!-- Network Gauge -->
+          <div class="card">
+            <div class="detail-label" data-i18n="res_network">Network Bandwidth</div>
+            <div class="stat-value" id="res-val-net" style="margin: 8px 0;">0 Kbps (Offline)</div>
+            <div class="progress-bar-bg"><div id="res-bar-net" class="progress-bar-fill" style="width: 0%;"></div></div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Store-and-Forward Queue</div>
+          </div>
+
+          <!-- Battery Gauge -->
+          <div class="card">
+            <div class="detail-label" data-i18n="res_battery">Battery Level</div>
+            <div class="stat-value" id="res-val-battery" style="margin: 8px 0;">88 %</div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 88%; background-color: #2e7d32;"></div></div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Solar Auxiliary Power</div>
+          </div>
+        </div>
+
+        <!-- Active LRU Memory Snapshot -->
+        <div class="card" style="margin-top: 20px;">
+          <h3 style="margin-bottom: 12px; font-size: 1.1rem;"><i class="fa-solid fa-memory"></i> Memory Management (LRU Model Swap Log)</h3>
+          <div id="memory-models-container" style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 15px;">
+            <!-- Active Models Rendered via JS -->
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-muted);">
+            <strong>LRU Policy:</strong> When RAM exceeds capacity (512MB), inactive models/workers are swapped out automatically to guarantee ML inference allocation.
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: RESOURCE SCHEDULER & CONCURRENCY -->
+      <section id="section-scheduler" class="page-section">
+        <div class="section-title"><i class="fa-solid fa-sliders"></i> Adaptive Resource Scheduler & Concurrency</div>
+
+        <div class="grid-2col">
+          <!-- Scheduler Controls & Task Queue -->
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <h3 style="font-size: 1.1rem;">Competing Task Queue</h3>
+              <button class="btn btn-primary" onclick="triggerSchedulerRun()"><i class="fa-solid fa-play"></i> Run Scheduler Pass</button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Task ID</th>
+                    <th>Task Type</th>
+                    <th>Crop</th>
+                    <th>Dynamic Priority</th>
+                    <th>Severity</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="task-queue-tbody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Deadlock Arbitration (Banker's Algorithm) -->
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <h3 style="font-size: 1.1rem;"><i class="fa-solid fa-lock"></i> Deadlock Arbitration (RAG)</h3>
+              <button class="btn btn-outline" onclick="runDeadlockCheck('deadlock_risk')">Simulate Contention</button>
+            </div>
+
+            <div id="deadlock-status-box" style="padding: 12px; border-radius: 8px; background: #e8f5e9; color: #2e7d32; font-weight: 700; margin-bottom: 15px;">
+              <i class="fa-solid fa-shield-check"></i> System State: SAFE (Deadlock Prevented via Banker's Algorithm)
+            </div>
+
+            <div style="font-size: 0.85rem; margin-bottom: 10px;"><strong>Resource Allocation Matrix (CPU, RAM, ML Engine, Network):</strong></div>
+            <div id="rag-matrix-display" style="font-family: monospace; font-size: 0.82rem; background: var(--bg-main); padding: 10px; border-radius: 6px;">
+              Loading resource graph...
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 6: SCHEDULER COMPARISON BENCHMARK -->
+      <section id="section-comparison" class="page-section">
+        <div class="section-title"><i class="fa-solid fa-chart-column"></i> Algorithm Benchmark & Comparison</div>
+
+        <div class="card" style="margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div>
+              <h3 style="font-size: 1.1rem;">Comparative Evaluation of 5 Schedulers</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Runs identical 25-task agricultural workload across FCFS, Round Robin, Priority, EDF, and Proposed Adaptive Scheduler.</p>
+            </div>
+            <button class="btn btn-primary" onclick="runAlgorithmComparison()"><i class="fa-solid fa-bolt"></i> Execute Benchmark Suite</button>
+          </div>
+
+          <!-- Comparison Table -->
+          <div class="table-responsive">
+            <table class="data-table" id="comparison-table">
+              <thead>
+                <tr>
+                  <th>Algorithm</th>
+                  <th>Avg Waiting Time</th>
+                  <th>Avg Response Time</th>
+                  <th>Throughput</th>
+                  <th>Deadline Misses</th>
+                  <th>Critical Disease Delay</th>
+                </tr>
+              </thead>
+              <tbody id="comparison-tbody">
+                <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Click 'Execute Benchmark Suite' to compare algorithms.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Comparative Charts Canvas Grid -->
+        <div class="grid-2col">
+          <div class="card">
+            <h4 style="margin-bottom: 10px;">Average Waiting Time (lower is better)</h4>
+            <canvas id="chart-waiting" height="200"></canvas>
+          </div>
+          <div class="card">
+            <h4 style="margin-bottom: 10px;">Critical Disease Detection Delay (lower is better)</h4>
+            <canvas id="chart-critical" height="200"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 7: FILE STORAGE MANAGEMENT -->
+      <section id="section-files" class="page-section">
+        <div class="section-title"><i class="fa-solid fa-folder-open"></i> File Management Dashboard — OS Objective</div>
+
+        <div class="metrics-grid">
+          <div class="card">
+            <div class="detail-label">/data/pending/</div>
+            <div class="stat-value" id="file-count-pending">0</div>
+            <div class="stat-label">Newly Uploaded Images</div>
+          </div>
+          <div class="card">
+            <div class="detail-label">/data/processing/</div>
+            <div class="stat-value" id="file-count-processing">0</div>
+            <div class="stat-label">In ML Inference Engine</div>
+          </div>
+          <div class="card">
+            <div class="detail-label">/data/completed/</div>
+            <div class="stat-value" id="file-count-completed">0</div>
+            <div class="stat-label">Diagnosed Scans</div>
+          </div>
+          <div class="card">
+            <div class="detail-label">/data/critical/</div>
+            <div class="stat-value" id="file-count-critical">0</div>
+            <div class="stat-label">High Severity Scans</div>
+          </div>
+          <div class="card">
+            <div class="detail-label">/data/archive/</div>
+            <div class="stat-value" id="file-count-archive">0</div>
+            <div class="stat-label">Archived Metadata</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3>Storage Policy & Status</h3>
+            <button class="btn btn-outline" onclick="triggerAutoArchive()"><i class="fa-solid fa-box-archive"></i> Run Retention Auto-Archive</button>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted);">
+            Every uploaded leaf image generates a structured JSON metadata sidecar containing timestamp, crop type, predicted disease, confidence score, and severity level.
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 8: TECHNICAL DETAILS PAGE -->
+      <section id="section-technical" class="page-section">
+        <div class="section-title"><i class="fa-solid fa-book-bookmark"></i> Technical Details & Project Objectives (For Evaluators)</div>
+
+        <div class="accordion-item open">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>1. Artificial Intelligence & Machine Learning Architecture</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="accordion-body">
+            <ul>
+              <li><strong>Model:</strong> EfficientNet-B0 (with ResNet-50 comparison option).</li>
+              <li><strong>Dataset:</strong> PlantVillage Dataset (54,305+ images across 38 crop/disease classes).</li>
+              <li><strong>Input Resolution:</strong> 224 x 224 pixels with ImageNet mean/std normalization.</li>
+              <li><strong>Controlled Knowledge Base:</strong> Verified agricultural recommendations mapping directly to predicted disease labels, eliminating hallucinated claims.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>2. Operating System Resource Orchestration & Scheduler Formula</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="accordion-body">
+            <p><strong>Context-Aware Dynamic Priority Formula:</strong></p>
+            <div style="background: var(--bg-main); padding: 12px; font-family: monospace; border-radius: 6px; margin: 10px 0;">
+              Priority = w_1·DiseaseRisk + w_2·Severity + w_3·CropImportance + w_4·WeatherRisk + w_5·(1/Deadline) + w_6·ResourceMatch
+            </div>
+            <ul>
+              <li><strong>CPU & RAM Management:</strong> Real-time simulation of RAM allocation and LRU model loading/unloading.</li>
+              <li><strong>Deadlock Prevention:</strong> Banker's Algorithm verifying system safe sequence before granting shared resource locks (CPU, RAM, ML Engine, Network).</li>
+              <li><strong>File Management:</strong> 5-stage directory state hierarchy (/data/pending, processing, completed, critical, archive).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>3. Shared Village Edge Computing & Cloud Sync</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="accordion-body">
+            <ul>
+              <li><strong>Offline-First Architecture:</strong> Complete disease detection, task scheduling, and data logging execute locally without continuous internet access.</li>
+              <li><strong>Store-and-Forward Synchronization:</strong> Local SQLite records & images automatically sync to AWS S3/Cloud when network connectivity is established.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
