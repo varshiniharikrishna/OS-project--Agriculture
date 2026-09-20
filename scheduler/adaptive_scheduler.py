@@ -10,6 +10,14 @@ import random
 from dataclasses import dataclass, field
 from typing import List, Dict, Any
 
+try:
+    from backend.config import SCHEDULER_WEIGHTS
+except ImportError:
+    SCHEDULER_WEIGHTS = {
+        "w1_disease_risk": 0.25, "w2_severity": 0.20, "w3_crop_importance": 0.15,
+        "w4_weather_risk": 0.15, "w5_deadline_urgency": 0.15, "w6_resource_urgency": 0.10
+    }
+
 @dataclass
 class AgriculturalTask:
     task_id: str
@@ -31,8 +39,10 @@ class AgriculturalTask:
     completion_time: float = -1.0
     waiting_time: float = 0.0
     response_time: float = 0.0
+    turnaround_time: float = 0.0
     dynamic_priority: float = 0.0
     severity: str = "Moderate"
+    priority_breakdown: dict = field(default_factory=dict)
 
     def __post_init__(self):
         if self.remaining_time == 0.0:
@@ -40,25 +50,26 @@ class AgriculturalTask:
 
 class ContextAwareAdaptiveScheduler:
     """Proposed Context-Aware Multi-Objective Resource Scheduler."""
-    def __init__(self, w_disease=0.25, w_severity=0.20, w_crop=0.15, w_weather=0.15, w_deadline=0.15, w_resource=0.10):
-        self.w_disease = w_disease
-        self.w_severity = w_severity
-        self.w_crop = w_crop
-        self.w_weather = w_weather
-        self.w_deadline = w_deadline
-        self.w_resource = w_resource
+    def __init__(self, weights=None):
+        self.weights = weights or SCHEDULER_WEIGHTS
 
     def compute_dynamic_priority(self, task: AgriculturalTask, weather_context: dict, system_state: dict) -> float:
         """
         Calculate dynamic priority score: Higher score = Higher scheduling priority.
-        Incorporates weather risk (humidity + rain), disease severity, crop importance,
-        urgency (1/deadline), and resource availability alignment.
+        PriorityScore = w1*DiseaseRisk + w2*Severity + w3*CropImportance + w4*WeatherRisk + w5*DeadlineUrgency + w6*ResourceUrgency
         """
-        # 1. Disease & Severity Risk (0 to 1)
+        w1 = self.weights.get("w1_disease_risk", 0.25)
+        w2 = self.weights.get("w2_severity", 0.20)
+        w3 = self.weights.get("w3_crop_importance", 0.15)
+        w4 = self.weights.get("w4_weather_risk", 0.15)
+        w5 = self.weights.get("w5_deadline_urgency", 0.15)
+        w6 = self.weights.get("w6_resource_urgency", 0.10)
+
+        # 1. Disease Risk & Severity Score
         severity_score = {"Critical": 1.0, "High": 0.8, "Moderate": 0.5, "Low": 0.2, "None": 0.1}.get(task.severity, 0.5)
         disease_factor = (task.disease_risk * 0.5) + (severity_score * 0.5)
 
-        # 2. Weather Risk (High humidity + rain increases fungal spread urgency)
+        # 2. Weather Risk (High humidity + rain probability)
         humidity = weather_context.get("humidity", 70.0) / 100.0
         rain_prob = weather_context.get("rain_probability", 20.0) / 100.0
         weather_risk = (humidity * 0.6) + (rain_prob * 0.4)
@@ -67,23 +78,33 @@ class ContextAwareAdaptiveScheduler:
         time_elapsed = max(0.1, time.time() - task.arrival_time)
         deadline_urgency = min(1.0, (time_elapsed + 5.0) / max(1.0, task.deadline_sec))
 
-        # 4. Resource Match (Bonus if task fits within current available CPU & RAM)
+        # 4. Resource Urgency & Match
         avail_cpu = system_state.get("available_cpu_pct", 80.0)
         avail_ram = system_state.get("available_ram_mb", 300.0)
         resource_match = 1.0 if (task.cpu_req_pct <= avail_cpu and task.ram_req_mb <= avail_ram) else 0.3
 
         # Formula synthesis
         priority_score = (
-            self.w_disease * disease_factor +
-            self.w_severity * severity_score +
-            self.w_crop * task.crop_importance +
-            self.w_weather * weather_risk +
-            self.w_deadline * deadline_urgency +
-            self.w_resource * resource_match
+            w1 * disease_factor +
+            w2 * severity_score +
+            w3 * task.crop_importance +
+            w4 * weather_risk +
+            w5 * deadline_urgency +
+            w6 * resource_match
         ) * 100.0
 
         task.dynamic_priority = round(priority_score, 2)
+        task.priority_breakdown = {
+            "disease_risk_factor": round(disease_factor, 2),
+            "severity_score": round(severity_score, 2),
+            "crop_importance": round(task.crop_importance, 2),
+            "weather_risk": round(weather_risk, 2),
+            "deadline_urgency": round(deadline_urgency, 2),
+            "resource_match": round(resource_match, 2),
+            "final_score": task.dynamic_priority
+        }
         return task.dynamic_priority
+
 
 
 # --- Benchmark Suite for Comparing 5 Schedulers ---
@@ -201,6 +222,7 @@ def run_scheduler_simulation(algorithm_name: str, tasks_input: List[Agricultural
             if current_task.remaining_time <= 0.001:
                 current_task.completion_time = current_time
                 current_task.waiting_time = round(current_task.completion_time - current_task.arrival_time - current_task.processing_time, 2)
+                current_task.turnaround_time = round(current_task.completion_time - current_task.arrival_time, 2)
                 completed_tasks.append(current_task)
             else:
                 # Re-add uncompleted task to ready queue
@@ -213,11 +235,13 @@ def run_scheduler_simulation(algorithm_name: str, tasks_input: List[Agricultural
             current_time += current_task.processing_time
             current_task.completion_time = current_time
             current_task.waiting_time = round(current_task.completion_time - current_task.arrival_time - current_task.processing_time, 2)
+            current_task.turnaround_time = round(current_task.completion_time - current_task.arrival_time, 2)
             completed_tasks.append(current_task)
 
     # Compute Comparative Evaluation Metrics
     avg_waiting = sum(t.waiting_time for t in completed_tasks) / len(completed_tasks)
     avg_response = sum(t.response_time for t in completed_tasks) / len(completed_tasks)
+    avg_turnaround = sum(t.turnaround_time for t in completed_tasks) / len(completed_tasks)
     total_duration = max(t.completion_time for t in completed_tasks)
     throughput = len(completed_tasks) / max(0.1, total_duration)
 
@@ -234,6 +258,7 @@ def run_scheduler_simulation(algorithm_name: str, tasks_input: List[Agricultural
         "total_makespan_sec": round(total_duration, 2),
         "avg_waiting_time_sec": round(avg_waiting, 2),
         "avg_response_time_sec": round(avg_response, 2),
+        "avg_turnaround_time_sec": round(avg_turnaround, 2),
         "throughput_tasks_per_sec": round(throughput, 3),
         "deadline_misses": deadline_misses,
         "deadline_miss_rate_pct": round(deadline_miss_rate, 1),
@@ -244,11 +269,14 @@ def run_scheduler_simulation(algorithm_name: str, tasks_input: List[Agricultural
             {
                 "task_id": t.task_id, "type": t.task_type, "crop": t.crop_type,
                 "arrival": round(t.arrival_time, 1), "waiting": t.waiting_time,
-                "response": t.response_time, "completion": round(t.completion_time, 1),
-                "dynamic_priority": t.dynamic_priority, "severity": t.severity
-            } for t in completed_tasks[:8]
+                "response": t.response_time, "turnaround": t.turnaround_time,
+                "start": round(t.start_time, 1), "completion": round(t.completion_time, 1),
+                "dynamic_priority": t.dynamic_priority, "severity": t.severity,
+                "priority_breakdown": getattr(t, 'priority_breakdown', {})
+            } for t in completed_tasks
         ]
     }
+
 
 
 def compare_all_schedulers(weather_context=None, system_state=None):

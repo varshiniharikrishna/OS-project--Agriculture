@@ -6,6 +6,48 @@ __pycache__/
 # Virtual environments
 venv/
 .venv/
+
+# PlantVillage dataset
+ml/dataset/PlantVillage/
+data/datasets/
+
+# Trained models
+ml/models/
+*.pth
+*.pt
+*.onnx
+
+# Generated inference data
+data/completed/
+data/processing/
+data/pending/
+data/critical/
+data/archive/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
+
+# IDE
+*.code-workspace
+
+# Python temporary files
+*.tmp
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
 env/
 
 # macOS

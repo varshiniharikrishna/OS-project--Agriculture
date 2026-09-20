@@ -5,6 +5,7 @@ Usage:
 """
 
 import os
+import sys
 import argparse
 import torch
 import torch.nn as nn
@@ -12,12 +13,27 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
-from ml.efficientnet_b0 import EfficientNetB0, ResNet50, PLANTVILLAGE_CLASSES
+# Add project root directory to sys.path so 'from ml.xxx' imports work when executed directly
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+try:
+    from ml.efficientnet_b0 import EfficientNetB0, ResNet50, PLANTVILLAGE_CLASSES
+except ImportError:
+    from efficientnet_b0 import EfficientNetB0, ResNet50, PLANTVILLAGE_CLASSES
+
 
 def train_model(data_dir, epochs=10, batch_size=32, lr=0.001, model_type="efficientnet_b0"):
     """Train EfficientNet-B0 or ResNet50 on PlantVillage dataset folders."""
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"Starting training on device: {device}")
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+        device = torch.device("mps")
+    else:
+        device = torch.device("cpu")
+
+    print(f"Starting training on device: {device}", flush=True)
 
     # Data Augmentation & Normalization
     data_transforms = transforms.Compose([
@@ -29,12 +45,13 @@ def train_model(data_dir, epochs=10, batch_size=32, lr=0.001, model_type="effici
     ])
 
     if not os.path.exists(data_dir):
-        print(f"Error: Dataset directory '{data_dir}' not found.")
-        print("Please upload the PlantVillage dataset to ml/dataset/PlantVillage according to ml/dataset/README.md.")
+        print(f"Error: Dataset directory '{data_dir}' not found.", flush=True)
+        print("Please upload the PlantVillage dataset to ml/dataset/PlantVillage according to ml/dataset/README.md.", flush=True)
         return
 
     dataset = datasets.ImageFolder(root=data_dir, transform=data_transforms)
-    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=2)
+    print(f"Dataset successfully loaded: {len(dataset)} images across {len(dataset.classes)} classes.", flush=True)
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=0)
 
     # Initialize Model
     if model_type == "resnet50":
@@ -48,12 +65,13 @@ def train_model(data_dir, epochs=10, batch_size=32, lr=0.001, model_type="effici
 
     # Training Loop
     model.train()
+    print(f"Training loop started for {epochs} epoch(s)...", flush=True)
     for epoch in range(epochs):
         running_loss = 0.0
         correct = 0
         total = 0
 
-        for images, labels in dataloader:
+        for step, (images, labels) in enumerate(dataloader):
             images, labels = images.to(device), labels.to(device)
 
             optimizer.zero_grad()
@@ -67,9 +85,15 @@ def train_model(data_dir, epochs=10, batch_size=32, lr=0.001, model_type="effici
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
+            if step == 0 or (step + 1) % 5 == 0 or (step + 1) == len(dataloader):
+                batch_acc = ((predicted == labels).sum().item() / labels.size(0)) * 100.0
+                print(f"Epoch [{epoch+1}/{epochs}] - Batch [{step+1}/{len(dataloader)}] - Loss: {loss.item():.4f} - Batch Acc: {batch_acc:.1f}%", flush=True)
+
+
         epoch_loss = running_loss / total
         epoch_acc = (correct / total) * 100.0
-        print(f"Epoch [{epoch+1}/{epochs}] - Loss: {epoch_loss:.4f} - Accuracy: {epoch_acc:.2f}%")
+        print(f"--- Epoch [{epoch+1}/{epochs}] Summary: Loss = {epoch_loss:.4f}, Accuracy = {epoch_acc:.2f}% ---")
+
 
     # Save Checkpoint
     output_path = os.path.join(os.path.dirname(__file__), "models", f"{model_type}_plantvillage.pth")

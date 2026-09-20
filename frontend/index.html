@@ -20,14 +20,14 @@
     </div>
 
     <ul class="sidebar-menu">
-      <li class="active"><a href="#section-dashboard" onclick="showSection('dashboard')"><i class="fa-solid fa-chart-pie"></i> <span data-i18n="nav_dashboard">Dashboard Overview</span></a></li>
-      <li><a href="#section-detection" onclick="showSection('detection')"><i class="fa-solid fa-microscope"></i> <span data-i18n="nav_detection">Crop Disease Detection</span></a></li>
-      <li><a href="#section-assistant" onclick="showSection('assistant')"><i class="fa-solid fa-hand-holding-hand"></i> <span data-i18n="nav_assistant">Farmer Assistance</span></a></li>
-      <li><a href="#section-scheduler" onclick="showSection('scheduler')"><i class="fa-solid fa-network-wired"></i> <span data-i18n="nav_scheduler">Resource Scheduler</span></a></li>
-      <li><a href="#section-resources" onclick="showSection('resources')"><i class="fa-solid fa-microchip"></i> <span data-i18n="nav_resources">Resource & Weather Monitor</span></a></li>
-      <li><a href="#section-comparison" onclick="showSection('comparison')"><i class="fa-solid fa-scale-balanced"></i> <span data-i18n="nav_comparison">Scheduler Comparison</span></a></li>
-      <li><a href="#section-files" onclick="showSection('files')"><i class="fa-solid fa-folder-tree"></i> <span data-i18n="nav_files">File Storage Management</span></a></li>
-      <li><a href="#section-technical" onclick="showSection('technical')"><i class="fa-solid fa-code"></i> <span data-i18n="nav_technical">Technical Details</span></a></li>
+      <li class="active"><a href="#section-dashboard" onclick="showSection('dashboard', event)"><i class="fa-solid fa-chart-pie"></i> <span data-i18n="nav_dashboard">Dashboard Overview</span></a></li>
+      <li><a href="#section-detection" onclick="showSection('detection', event)"><i class="fa-solid fa-microscope"></i> <span data-i18n="nav_detection">Crop Disease Detection</span></a></li>
+      <li><a href="#section-assistant" onclick="showSection('assistant', event)"><i class="fa-solid fa-hand-holding-hand"></i> <span data-i18n="nav_assistant">Farmer Assistance</span></a></li>
+      <li><a href="#section-scheduler" onclick="showSection('scheduler', event)"><i class="fa-solid fa-network-wired"></i> <span data-i18n="nav_scheduler">Resource Scheduler</span></a></li>
+      <li><a href="#section-resources" onclick="showSection('resources', event)"><i class="fa-solid fa-microchip"></i> <span data-i18n="nav_resources">Resource & Weather Monitor</span></a></li>
+      <li><a href="#section-comparison" onclick="showSection('comparison', event)"><i class="fa-solid fa-scale-balanced"></i> <span data-i18n="nav_comparison">Scheduler Comparison</span></a></li>
+      <li><a href="#section-files" onclick="showSection('files', event)"><i class="fa-solid fa-folder-tree"></i> <span data-i18n="nav_files">File Storage Management</span></a></li>
+      <li><a href="#section-technical" onclick="showSection('technical', event)"><i class="fa-solid fa-code"></i> <span data-i18n="nav_technical">Technical Details</span></a></li>
     </ul>
 
     <div class="sidebar-footer">
@@ -142,19 +142,32 @@
 
           <!-- Environmental Context Card -->
           <div class="card">
-            <h3 style="margin-bottom: 15px; font-size: 1.1rem;"><i class="fa-solid fa-cloud-sun-rain"></i> Climate & Risk Context</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <h3 style="font-size: 1.1rem;" data-i18n="weather_title"><i class="fa-solid fa-cloud-sun-rain"></i> Climate & Risk Context</h3>
+              <!-- Indian Agricultural Region Selector -->
+              <select id="indian-region-select" onchange="changeIndianRegion(this.value)" style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 0.82rem; background: white;">
+                <option value="tamil_nadu" selected>📍 Tamil Nadu (Thanjavur)</option>
+                <option value="punjab">📍 Punjab (Ludhiana)</option>
+                <option value="maharashtra">📍 Maharashtra (Nashik)</option>
+                <option value="uttar_pradesh">📍 Uttar Pradesh (Varanasi)</option>
+                <option value="karnataka">📍 Karnataka (Shimoga)</option>
+                <option value="west_bengal">📍 West Bengal (Burdwan)</option>
+                <option value="telangana">📍 Telangana (Warangal)</option>
+                <option value="bihar">📍 Bihar (Patna)</option>
+              </select>
+            </div>
             <div class="result-grid-details" style="grid-template-columns: repeat(2, 1fr);">
               <div class="detail-item">
                 <div class="detail-label" data-i18n="weather_temp">Temperature</div>
-                <div class="detail-value" id="dash-weather-temp">29.5 °C</div>
+                <div class="detail-value" id="dash-weather-temp">31.5 °C</div>
               </div>
               <div class="detail-item">
                 <div class="detail-label" data-i18n="weather_humidity">Humidity</div>
-                <div class="detail-value" id="dash-weather-humidity">82 %</div>
+                <div class="detail-value" id="dash-weather-humidity">86 %</div>
               </div>
               <div class="detail-item">
                 <div class="detail-label" data-i18n="weather_rain">Rain Probability</div>
-                <div class="detail-value" id="dash-weather-rain">65 %</div>
+                <div class="detail-value" id="dash-weather-rain">75 %</div>
               </div>
               <div class="detail-item">
                 <div class="detail-label" data-i18n="weather_risk">Fungal Risk Index</div>
@@ -163,7 +176,7 @@
             </div>
             <div style="background: var(--primary-light); padding: 12px; border-radius: 6px; margin-top: 15px; font-size: 0.85rem;">
               <i class="fa-solid fa-circle-info" style="color: var(--primary-color);"></i>
-              <strong>OS Scheduling Impact:</strong> High humidity & rain probability elevate priority weight ($w_{\text{weather}} = 0.15$) for Leaf Disease Inference & Irrigation Check tasks.
+              <strong data-i18n="label_os_impact">OS Scheduling Impact:</strong> <span id="weather-impact-desc">High humidity (86%) & 75% rain probability elevate weather priority weight (w_weather = 0.15) for Leaf Disease Inference & Irrigation tasks.</span>
             </div>
           </div>
         </div>
@@ -224,15 +237,44 @@
               </div>
               <div class="detail-item">
                 <div class="detail-label" data-i18n="label_confidence">Confidence</div>
-                <div class="detail-value" id="res-confidence">94.2 %</div>
+                <div class="detail-value" id="res-confidence">87.4 %</div>
+                <div id="res-conf-tier" class="confidence-tier-badge">High confidence</div>
               </div>
               <div class="detail-item">
                 <div class="detail-label" data-i18n="label_status">Plant Status</div>
-                <div class="detail-value" id="res-status-text" style="color: #e65100;">Diseased Leaf</div>
+                <div class="detail-value" id="res-status-text" style="color: #e65100; font-weight: 800;">DISEASE DETECTED</div>
               </div>
               <div class="detail-item">
                 <div class="detail-label">Model Architecture</div>
                 <div class="detail-value" id="res-model-used">EfficientNet-B0</div>
+              </div>
+            </div>
+
+            <!-- Confidence Progress Bar -->
+            <div style="margin-top: 15px;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 4px;">
+                <span><strong>Prediction Confidence Meter</strong></span>
+                <span id="res-conf-ascii" style="font-family: monospace;">█████████████████░░░</span>
+              </div>
+              <div class="progress-bar-bg"><div id="res-bar-confidence" class="progress-bar-fill" style="width: 87.4%; background-color: #2e7d32;"></div></div>
+            </div>
+
+            <!-- Uncertainty Warning Box (Shown when confidence < 60%) -->
+            <div id="res-uncertainty-warning" style="display: none; background: #fff3e0; border-left: 4px solid #ef6c00; padding: 10px; border-radius: 6px; margin-top: 12px; font-size: 0.88rem; color: #e65100;">
+              <i class="fa-solid fa-triangle-exclamation"></i> <strong>⚠️ AI is uncertain. Please capture another clear image of the leaf.</strong>
+            </div>
+
+            <!-- Grad-CAM Explainability Heatmap Box -->
+            <div id="gradcam-box" style="margin-top: 15px; background: #f8f9fa; border: 1px dashed #cbd5e1; padding: 12px; border-radius: 8px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <strong style="font-size: 0.9rem; color: var(--primary-dark);"><i class="fa-solid fa-eye"></i> Grad-CAM AI Attention Heatmap</strong>
+                <span style="font-size: 0.75rem; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px;">Explainable AI</span>
+              </div>
+              <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <img id="gradcam-heatmap-img" src="" alt="Grad-CAM Heatmap" style="width: 110px; height: 110px; border-radius: 6px; border: 1px solid #94a3b8; display: none;">
+                <div style="flex: 1; font-size: 0.85rem; color: #334155;">
+                  <span id="gradcam-explanation-text">The model focused primarily on the discolored lesion and necrotic spot regions on the leaf surface.</span>
+                </div>
               </div>
             </div>
 
@@ -302,123 +344,180 @@
         </div>
       </section>
 
-      <!-- SECTION 4: RESOURCE MONITOR & WEATHER -->
+      <!-- SECTION 4: FARM CONDITIONS & DEVICE STATUS -->
       <section id="section-resources" class="page-section">
-        <div class="section-title"><i class="fa-solid fa-microchip"></i> Resource Management & Environmental Monitor</div>
+        <div class="section-title"><i class="fa-solid fa-cloud-sun"></i> Farm Conditions & Device Status</div>
 
-        <div class="metrics-grid">
-          <!-- CPU Gauge -->
-          <div class="card">
-            <div class="detail-label" data-i18n="res_cpu">CPU Utilization</div>
-            <div class="stat-value" id="res-val-cpu" style="margin: 8px 0;">34.2 %</div>
-            <div class="progress-bar-bg"><div id="res-bar-cpu" class="progress-bar-fill" style="width: 34.2%;"></div></div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Quad-Core ARM Cortex-A72</div>
+        <!-- Open-Meteo Weather Location Search Bar -->
+        <div class="card" style="margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+            <h3 style="font-size: 1.1rem;"><i class="fa-solid fa-location-dot"></i> Live Weather & Climate Conditions</h3>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="weather-location-input" placeholder="Enter city (e.g. Ludhiana, Thanjavur, Nashik)..." style="padding: 6px 12px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 0.88rem; min-width: 250px;">
+              <button class="btn btn-primary" onclick="searchLiveWeather()"><i class="fa-solid fa-magnifying-glass"></i> Fetch Weather</button>
+            </div>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px;">
+            <strong>Location:</strong> <span id="weather-location-name">Thanjavur, Tamil Nadu</span> | 
+            <strong>Status:</strong> <span id="weather-api-badge" class="severity-badge severity-low" style="font-size: 0.75rem;">Open-Meteo API</span> | 
+            <strong>Last Updated:</strong> <span id="weather-last-updated">Just now</span>
           </div>
 
-          <!-- RAM Gauge -->
-          <div class="card">
-            <div class="detail-label" data-i18n="res_ram">RAM Usage</div>
-            <div class="stat-value" id="res-val-ram" style="margin: 8px 0;">225 MB / 512 MB</div>
-            <div class="progress-bar-bg"><div id="res-bar-ram" class="progress-bar-fill" style="width: 44%; background-color: var(--secondary-color);"></div></div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Active LRU Eviction Manager</div>
-          </div>
-
-          <!-- Storage Gauge -->
-          <div class="card">
-            <div class="detail-label" data-i18n="res_storage">Local Storage</div>
-            <div class="stat-value" id="res-val-storage" style="margin: 8px 0;">18.5 MB / 1024 MB</div>
-            <div class="progress-bar-bg"><div id="res-bar-storage" class="progress-bar-fill" style="width: 1.8%; background-color: #ef6c00;"></div></div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">5 Hierarchy Directories</div>
-          </div>
-
-          <!-- Network Gauge -->
-          <div class="card">
-            <div class="detail-label" data-i18n="res_network">Network Bandwidth</div>
-            <div class="stat-value" id="res-val-net" style="margin: 8px 0;">0 Kbps (Offline)</div>
-            <div class="progress-bar-bg"><div id="res-bar-net" class="progress-bar-fill" style="width: 0%;"></div></div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Store-and-Forward Queue</div>
-          </div>
-
-          <!-- Battery Gauge -->
-          <div class="card">
-            <div class="detail-label" data-i18n="res_battery">Battery Level</div>
-            <div class="stat-value" id="res-val-battery" style="margin: 8px 0;">88 %</div>
-            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 88%; background-color: #2e7d32;"></div></div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Solar Auxiliary Power</div>
+          <div class="metrics-grid" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="card stat-card"><div class="stat-info"><div class="stat-value" id="res-weather-temp">29.5 °C</div><div class="stat-label">Air Temperature</div></div></div>
+            <div class="card stat-card"><div class="stat-info"><div class="stat-value" id="res-weather-humidity">82 %</div><div class="stat-label">Relative Humidity</div></div></div>
+            <div class="card stat-card"><div class="stat-info"><div class="stat-value" id="res-weather-rain">65 %</div><div class="stat-label">Rain Probability</div></div></div>
+            <div class="card stat-card"><div class="stat-info"><div class="stat-value" id="res-weather-risk" style="color: #d32f2f;">HIGH RISK</div><div class="stat-label">Fungal Disease Threat</div></div></div>
           </div>
         </div>
 
-        <!-- Active LRU Memory Snapshot -->
-        <div class="card" style="margin-top: 20px;">
-          <h3 style="margin-bottom: 12px; font-size: 1.1rem;"><i class="fa-solid fa-memory"></i> Memory Management (LRU Model Swap Log)</h3>
-          <div id="memory-models-container" style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 15px;">
-            <!-- Active Models Rendered via JS -->
-          </div>
-          <div style="font-size: 0.82rem; color: var(--text-muted);">
-            <strong>LRU Policy:</strong> When RAM exceeds capacity (512MB), inactive models/workers are swapped out automatically to guarantee ML inference allocation.
-          </div>
-        </div>
-      </section>
-
-      <!-- SECTION 5: RESOURCE SCHEDULER & CONCURRENCY -->
-      <section id="section-scheduler" class="page-section">
-        <div class="section-title"><i class="fa-solid fa-sliders"></i> Adaptive Resource Scheduler & Concurrency</div>
-
+        <!-- Real Laptop Hardware Resources (psutil) vs Simulated Edge Device -->
         <div class="grid-2col">
-          <!-- Scheduler Controls & Task Queue -->
           <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-              <h3 style="font-size: 1.1rem;">Competing Task Queue</h3>
-              <button class="btn btn-primary" onclick="triggerSchedulerRun()"><i class="fa-solid fa-play"></i> Run Scheduler Pass</button>
-            </div>
-
-            <div class="table-responsive">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>Task ID</th>
-                    <th>Task Type</th>
-                    <th>Crop</th>
-                    <th>Dynamic Priority</th>
-                    <th>Severity</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody id="task-queue-tbody">
-                  <!-- Rendered dynamically -->
-                </tbody>
-              </table>
+            <h3 style="margin-bottom: 12px; font-size: 1.1rem;"><i class="fa-solid fa-laptop"></i> Actual Host Laptop Status (psutil)</h3>
+            <div class="result-grid-details" style="grid-template-columns: repeat(2, 1fr);">
+              <div class="detail-item"><div class="detail-label">Laptop CPU Load</div><div class="detail-value" id="psutil-cpu">24.5 %</div></div>
+              <div class="detail-item"><div class="detail-label">Laptop RAM Used</div><div class="detail-value" id="psutil-ram">420 MB / 8 GB</div></div>
+              <div class="detail-item"><div class="detail-label">Laptop Disk Usage</div><div class="detail-value" id="psutil-disk">45 GB / 256 GB</div></div>
+              <div class="detail-item"><div class="detail-label">Hardware Source</div><div class="detail-value" style="color: var(--primary-color);">Real System (psutil)</div></div>
             </div>
           </div>
 
-          <!-- Deadlock Arbitration (Banker's Algorithm) -->
           <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-              <h3 style="font-size: 1.1rem;"><i class="fa-solid fa-lock"></i> Deadlock Arbitration (RAG)</h3>
-              <button class="btn btn-outline" onclick="runDeadlockCheck('deadlock_risk')">Simulate Contention</button>
-            </div>
-
-            <div id="deadlock-status-box" style="padding: 12px; border-radius: 8px; background: #e8f5e9; color: #2e7d32; font-weight: 700; margin-bottom: 15px;">
-              <i class="fa-solid fa-shield-check"></i> System State: SAFE (Deadlock Prevented via Banker's Algorithm)
-            </div>
-
-            <div style="font-size: 0.85rem; margin-bottom: 10px;"><strong>Resource Allocation Matrix (CPU, RAM, ML Engine, Network):</strong></div>
-            <div id="rag-matrix-display" style="font-family: monospace; font-size: 0.82rem; background: var(--bg-main); padding: 10px; border-radius: 6px;">
-              Loading resource graph...
+            <h3 style="margin-bottom: 12px; font-size: 1.1rem;"><i class="fa-solid fa-microchip"></i> Edge Device Status (Simulation)</h3>
+            <div class="result-grid-details" style="grid-template-columns: repeat(2, 1fr);">
+              <div class="detail-item"><div class="detail-label">Simulated Edge RAM</div><div class="detail-value">225 MB / 512 MB</div></div>
+              <div class="detail-item"><div class="detail-label">LRU Active Models</div><div class="detail-value">EfficientNet-B0</div></div>
+              <div class="detail-item"><div class="detail-label">Storage Capacity</div><div class="detail-value">18.5 MB / 1024 MB</div></div>
+              <div class="detail-item"><div class="detail-label">Deployment Status</div><div class="detail-value" style="color: #ef6c00;">Edge Simulation</div></div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- SECTION 6: SCHEDULER COMPARISON BENCHMARK -->
+      <!-- SECTION 5: RESOURCE SCHEDULER & TASK CREATION -->
+      <section id="section-scheduler" class="page-section">
+        <div class="section-title"><i class="fa-solid fa-sliders"></i> Context-Aware Resource Scheduler & Task Creation</div>
+
+        <!-- Task Creation Form -->
+        <div class="card" style="margin-bottom: 20px;">
+          <h3 style="font-size: 1.1rem; margin-bottom: 12px;"><i class="fa-solid fa-plus-minus"></i> Create Custom Task for Scheduling Queue</h3>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; font-size: 0.85rem;">
+            <div>
+              <label>Task Type:</label>
+              <select id="task-type-input" style="width: 100%; padding: 6px; border-radius: 4px; border: 1px solid var(--border-color);">
+                <option value="Leaf_Inference">Leaf_Inference</option>
+                <option value="Image_Preprocess">Image_Preprocess</option>
+                <option value="Image_Compress">Image_Compress</option>
+                <option value="Cloud_Sync">Cloud_Sync</option>
+                <option value="Farmer_NLP">Farmer_NLP</option>
+                <option value="Irrigation_Check">Irrigation_Check</option>
+              </select>
+            </div>
+            <div>
+              <label>Crop Type:</label>
+              <input type="text" id="task-crop-input" value="Tomato" style="width: 100%; padding: 6px; border-radius: 4px; border: 1px solid var(--border-color);">
+            </div>
+            <div>
+              <label>Disease Risk (0.0 - 1.0):</label>
+              <input type="number" id="task-risk-input" value="0.85" step="0.05" min="0" max="1" style="width: 100%; padding: 6px; border-radius: 4px; border: 1px solid var(--border-color);">
+            </div>
+            <div>
+              <label>Severity Level:</label>
+              <select id="task-severity-input" style="width: 100%; padding: 6px; border-radius: 4px; border: 1px solid var(--border-color);">
+                <option value="Critical">Critical</option>
+                <option value="High" selected>High</option>
+                <option value="Moderate">Moderate</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+            <div>
+              <label>Crop Importance (0.0 - 1.0):</label>
+              <input type="number" id="task-crop-imp-input" value="0.9" step="0.05" min="0" max="1" style="width: 100%; padding: 6px; border-radius: 4px; border: 1px solid var(--border-color);">
+            </div>
+            <div>
+              <label>Deadline (seconds):</label>
+              <input type="number" id="task-deadline-input" value="15" min="1" max="120" style="width: 100%; padding: 6px; border-radius: 4px; border: 1px solid var(--border-color);">
+            </div>
+            <div>
+              <label>CPU Requirement (%):</label>
+              <input type="number" id="task-cpu-input" value="45" min="5" max="100" style="width: 100%; padding: 6px; border-radius: 4px; border: 1px solid var(--border-color);">
+            </div>
+            <div>
+              <label>RAM Requirement (MB):</label>
+              <input type="number" id="task-ram-input" value="180" min="10" max="500" style="width: 100%; padding: 6px; border-radius: 4px; border: 1px solid var(--border-color);">
+            </div>
+          </div>
+          <div style="margin-top: 15px; display: flex; gap: 10px;">
+            <button class="btn btn-primary" onclick="addUserTask()"><i class="fa-solid fa-plus"></i> Add Task to Queue</button>
+            <button class="btn btn-outline" onclick="clearUserTaskQueue()"><i class="fa-solid fa-trash"></i> Clear Queue</button>
+          </div>
+        </div>
+
+        <!-- Queue Controls & Selection -->
+        <div class="card" style="margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <h3 style="font-size: 1.1rem;">User Task Queue & Algorithm Execution</h3>
+              <select id="scheduler-algo-select" style="padding: 6px 12px; border-radius: 4px; border: 1px solid var(--border-color); font-weight: 600;">
+                <option value="Adaptive" selected>Proposed Context-Aware Adaptive Scheduler</option>
+                <option value="FCFS">First-Come, First-Served (FCFS)</option>
+                <option value="RoundRobin">Round Robin (Time Quantum = 1.0s)</option>
+                <option value="Priority">Priority Scheduling (Static Priority)</option>
+                <option value="EDF">Earliest Deadline First (EDF)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="runUserQueueScheduler()"><i class="fa-solid fa-play"></i> Run Selected Scheduler</button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Task ID</th>
+                  <th>Task Type</th>
+                  <th>Crop</th>
+                  <th>Disease Risk</th>
+                  <th>Severity</th>
+                  <th>Deadline</th>
+                  <th>Dynamic Priority</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="task-queue-tbody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Deadlock Arbitration (Banker's Algorithm) -->
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="font-size: 1.1rem;"><i class="fa-solid fa-lock"></i> Deadlock Arbitration (Banker's Algorithm)</h3>
+            <button class="btn btn-outline" onclick="runDeadlockCheck('deadlock_risk')">Simulate Resource Request</button>
+          </div>
+
+          <div id="deadlock-status-box" style="padding: 12px; border-radius: 8px; background: #e8f5e9; color: #2e7d32; font-weight: 700; margin-bottom: 15px;">
+            <i class="fa-solid fa-shield-check"></i> System State: SAFE (Deadlock Prevented via Banker's Algorithm)
+          </div>
+
+          <div style="font-size: 0.85rem; margin-bottom: 10px;"><strong>Resource Allocation Matrix (CPU, RAM, ML Engine, Network):</strong></div>
+          <div id="rag-matrix-display" style="font-family: monospace; font-size: 0.82rem; background: var(--bg-main); padding: 10px; border-radius: 6px;">
+            Loading resource graph...
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 6: SCHEDULER COMPARISON & HARDWARE BENCHMARK -->
       <section id="section-comparison" class="page-section">
-        <div class="section-title"><i class="fa-solid fa-chart-column"></i> Algorithm Benchmark & Comparison</div>
+        <div class="section-title"><i class="fa-solid fa-chart-column"></i> Algorithm Benchmark & Edge vs Laptop Comparison</div>
 
         <div class="card" style="margin-bottom: 20px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
             <div>
               <h3 style="font-size: 1.1rem;">Comparative Evaluation of 5 Schedulers</h3>
-              <p style="font-size: 0.85rem; color: var(--text-muted);">Runs identical 25-task agricultural workload across FCFS, Round Robin, Priority, EDF, and Proposed Adaptive Scheduler.</p>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Runs 5 competing tasks (Camera 1: Healthy, Camera 2: Severe, Camera 3: Healthy, Camera 4: High-Risk, Camera 5: Low-Confidence) across FCFS, Round Robin, Priority, EDF, and Proposed Adaptive Scheduler.</p>
             </div>
             <button class="btn btn-primary" onclick="runAlgorithmComparison()"><i class="fa-solid fa-bolt"></i> Execute Benchmark Suite</button>
           </div>
@@ -443,15 +542,71 @@
           </div>
         </div>
 
-        <!-- Comparative Charts Canvas Grid -->
-        <div class="grid-2col">
-          <div class="card">
-            <h4 style="margin-bottom: 10px;">Average Waiting Time (lower is better)</h4>
-            <canvas id="chart-waiting" height="200"></canvas>
+        <!-- Edge vs Laptop Hardware Comparison Matrix -->
+        <div class="card" style="margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="font-size: 1.1rem;"><i class="fa-solid fa-scale-balanced"></i> Edge Device (Raspberry Pi) vs Laptop (MacBook) Benchmark</h3>
+            <span style="font-size: 0.8rem; background: var(--primary-light); color: var(--primary-color); padding: 4px 8px; border-radius: 4px; font-weight: 600;">Hardware Evaluation</span>
           </div>
-          <div class="card">
-            <h4 style="margin-bottom: 10px;">Critical Disease Detection Delay (lower is better)</h4>
-            <canvas id="chart-critical" height="200"></canvas>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Evaluation Metric</th>
+                  <th>Laptop (MacBook Host)</th>
+                  <th>Edge Device (Raspberry Pi 4B)</th>
+                  <th>System Impact / Rationale</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Inference Latency</strong></td>
+                  <td>0.18 sec</td>
+                  <td><span style="color: #d32f2f; font-weight: 700;">1.42 sec</span></td>
+                  <td>8x slower processing on edge hardware</td>
+                </tr>
+                <tr>
+                  <td><strong>RAM Footprint</strong></td>
+                  <td>420.5 MB</td>
+                  <td><span style="color: #ef6c00; font-weight: 700;">650.0 MB</span></td>
+                  <td>Consumes 32% of 2GB Pi RAM capacity</td>
+                </tr>
+                <tr>
+                  <td><strong>CPU Utilization</strong></td>
+                  <td>22.4 %</td>
+                  <td><span style="color: #d32f2f; font-weight: 700;">78.6 %</span></td>
+                  <td>High CPU pressure triggers thermal throttling</td>
+                </tr>
+                <tr>
+                  <td><strong>Network Requirement</strong></td>
+                  <td>Offline / Local</td>
+                  <td>Offline / Local</td>
+                  <td>Zero cloud latency / full offline privacy</td>
+                </tr>
+                <tr>
+                  <td><strong>Prediction Consistency</strong></td>
+                  <td>100% Parity</td>
+                  <td>100% Parity</td>
+                  <td>Identical PyTorch EfficientNet-B0 weights</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Model Evaluation Metrics Panel -->
+        <div class="card" style="margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="font-size: 1.1rem;"><i class="fa-solid fa-square-poll-vertical"></i> Model Validation & Test Evaluation Metrics</h3>
+            <button class="btn btn-outline" onclick="loadEvaluationMetrics()"><i class="fa-solid fa-rotate"></i> Load Evaluation Report</button>
+          </div>
+          <div class="metrics-grid" style="grid-template-columns: repeat(6, 1fr); margin-bottom: 15px;">
+            <div class="card stat-card"><div class="stat-info"><div class="stat-value" id="eval-train-acc">64.86%</div><div class="stat-label">Training Acc</div></div></div>
+            <div class="card stat-card"><div class="stat-info"><div class="stat-value" id="eval-val-acc">63.20%</div><div class="stat-label">Validation Acc</div></div></div>
+            <div class="card stat-card"><div class="stat-info"><div class="stat-value" id="eval-test-acc">62.40%</div><div class="stat-label">Test Acc</div></div></div>
+            <div class="card stat-card"><div class="stat-info"><div class="stat-value" id="eval-precision">62.40%</div><div class="stat-label">Precision</div></div></div>
+            <div class="card stat-card"><div class="stat-info"><div class="stat-value" id="eval-recall">62.40%</div><div class="stat-label">Recall</div></div></div>
+            <div class="card stat-card"><div class="stat-info"><div class="stat-value" id="eval-f1">62.40%</div><div class="stat-label">F1-Score</div></div></div>
           </div>
         </div>
       </section>

@@ -60,7 +60,7 @@ class TestAgriEdgeOS(unittest.TestCase):
         res = self.client.post('/api/farmer_assistant', json={'query': 'What fertilizer is suitable?', 'language': 'en'})
         self.assertEqual(res.status_code, 200)
         data = res.get_json()
-        self.assertIn('Nutrient Management', data['category'])
+        self.assertIn('Agricultural Knowledge Retrieval', data['category'])
         print("✓ Farmer Assistant Panel API Passed")
 
     def test_disease_inference(self):

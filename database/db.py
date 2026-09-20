@@ -171,3 +171,57 @@ def save_farmer_query(question, category, answer, language="en"):
     """, (now_str, question, category, answer, language))
     conn.commit()
     conn.close()
+
+# --- Task Queue CRUD Operations ---
+def get_user_tasks():
+    """Retrieve all current tasks from SQLite task queue."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM task_queue ORDER BY arrival_time ASC;")
+    rows = [dict(row) for row in cursor.fetchall()]
+    conn.close()
+    return rows
+
+def save_user_task(task_dict):
+    """Insert or update a user task in SQLite task queue."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+    INSERT OR REPLACE INTO task_queue 
+    (task_id, task_type, device_id, arrival_time, processing_time, cpu_req, ram_req, net_req, priority, disease_risk, crop_importance, urgency, deadline, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    """, (
+        task_dict["task_id"],
+        task_dict["task_type"],
+        task_dict.get("device_id", "Camera-01"),
+        str(task_dict.get("arrival_time", 0.0)),
+        float(task_dict.get("processing_time", 1.5)),
+        float(task_dict.get("cpu_req", 25.0)),
+        float(task_dict.get("ram_req", 60.0)),
+        float(task_dict.get("net_req", 10.0)),
+        float(task_dict.get("priority", 1.0)),
+        float(task_dict.get("disease_risk", 0.5)),
+        float(task_dict.get("crop_importance", 0.8)),
+        float(task_dict.get("urgency", 0.5)),
+        float(task_dict.get("deadline", 15.0)),
+        task_dict.get("status", "Pending")
+    ))
+    conn.commit()
+    conn.close()
+
+def delete_user_task(task_id):
+    """Delete a task by ID from SQLite task queue."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM task_queue WHERE task_id = ?;", (task_id,))
+    conn.commit()
+    conn.close()
+
+def clear_user_tasks():
+    """Remove all tasks from SQLite task queue."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM task_queue;")
+    conn.commit()
+    conn.close()
+

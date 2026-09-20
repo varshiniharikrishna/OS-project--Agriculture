@@ -4,9 +4,18 @@ Natively defined using PyTorch nn modules (MBConv, Squeeze-and-Excitation, SiLU 
 """
 
 import math
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
+try:
+    import torch
+    import torch.nn as nn
+    import torch.nn.functional as F
+    _TORCH_OK = True
+except Exception:
+    _TORCH_OK = False
+    class _FakeModule:
+        pass
+    class nn:
+        Module = _FakeModule
+        Sequential = _FakeModule
 
 # PlantVillage 38 Class Names
 PLANTVILLAGE_CLASSES = [
