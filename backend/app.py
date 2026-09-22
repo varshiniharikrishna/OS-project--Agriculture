@@ -16,7 +16,7 @@ if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
 from database.db import init_db, save_leaf_scan, get_all_scans, get_dashboard_summary, save_farmer_query
-from ml.inference import run_disease_inference
+from ml.inference import run_disease_inference, default_predictor
 from ml.knowledge_base import KNOWLEDGE_BASE
 from scheduler.adaptive_scheduler import compare_all_schedulers, run_scheduler_simulation, generate_sample_workload
 from memory.memory_manager import memory_manager
@@ -71,71 +71,80 @@ def analyze_disease():
     Core Feature 1: Leaf Image Upload & Real EfficientNet-B0 Disease Detection.
     Stores image in /data/pending, allocates memory, runs inference, and transitions file state.
     """
-    if 'image' not in request.files:
-        return jsonify({"error": "No image file provided"}), 400
-
-    image_file = request.files['image']
-    if image_file.filename == '':
-        return jsonify({"error": "Selected file is empty"}), 400
-
-    model_type = request.form.get('model', 'efficientnet_b0')
-    device_id = request.form.get('device_id', 'Edge-Camera-01')
-
-    # Step 1: File Storage - Store in /data/pending
-    file_bytes = image_file.read()
-    img_path, clean_filename, meta = store_new_image(file_bytes, image_file.filename, device_id=device_id)
-
-    # Step 2: Memory Management - Allocate RAM for Inference
-    model_name = "ResNet-50" if model_type == "resnet50" else "EfficientNet-B0"
-    mem_result = memory_manager.allocate(model_name)
-
-    # Step 3: Transition File State to /data/processing
-    transition_file_status(clean_filename, "processing")
-
-    # Step 4: ML Inference Engine Execution with Grad-CAM heatmap generation
-    image_file.seek(0)
-    heatmap_out_path = os.path.join(PROJECT_ROOT, "frontend", "css", f"heatmap_{clean_filename}")
-    diagnosis = run_disease_inference(image_file, model_type=model_type)
-
-    # Generate Grad-CAM explainability heatmap overlay
     try:
-        from ml.gradcam import generate_explainability
+        if 'image' not in request.files:
+            return jsonify({"error": "No image file provided"}), 400
+
+        image_file = request.files['image']
+        if image_file.filename == '':
+            return jsonify({"error": "Selected file is empty"}), 400
+
+        model_type = request.form.get('model', 'efficientnet_b0')
+        device_id = request.form.get('device_id', 'Edge-Camera-01')
+
+        # Step 1: File Storage - Store in /data/pending
+        file_bytes = image_file.read()
+        img_path, clean_filename, meta = store_new_image(file_bytes, image_file.filename, device_id=device_id)
+
+        # Step 2: Memory Management - Allocate RAM for Inference
+        model_name = "ResNet-50" if model_type == "resnet50" else "EfficientNet-B0"
+        mem_result = memory_manager.allocate(model_name)
+
+        # Step 3: Transition File State to /data/processing
+        transition_file_status(clean_filename, "processing")
+
+        # Step 4: ML Inference Engine Execution
         image_file.seek(0)
-        from PIL import Image
-        pil_img = Image.open(image_file).convert('RGB')
-        grad_res = generate_explainability(default_predictor.model, default_predictor.preprocess_image(pil_img), pil_img, heatmap_out_path)
-        diagnosis["gradcam_heatmap_url"] = f"/css/heatmap_{clean_filename}"
-        diagnosis["gradcam_explanation"] = grad_res.get("explanation", "The model focused on leaf lesion and necrotic spot regions.")
-    except Exception as e:
-        diagnosis["gradcam_heatmap_url"] = None
-        diagnosis["gradcam_explanation"] = "The model focused on discolored leaf spot regions."
+        heatmap_out_path = os.path.join(PROJECT_ROOT, "frontend", "css", f"heatmap_{clean_filename}")
+        diagnosis = run_disease_inference(image_file, model_type=model_type)
 
-    # Step 5: Transition File State to /data/completed or /data/critical
-    final_state = "critical" if diagnosis["severity"] in ["Critical", "High"] else "completed"
-    transition_file_status(clean_filename, final_state, diagnosis_result=diagnosis)
+        # Generate Grad-CAM explainability heatmap overlay
+        try:
+            from ml.gradcam import generate_explainability
+            image_file.seek(0)
+            from PIL import Image
+            pil_img = Image.open(image_file).convert('RGB')
+            if hasattr(default_predictor, 'model') and default_predictor.model is not None:
+                grad_res = generate_explainability(default_predictor.model, default_predictor.preprocess_image(pil_img), pil_img, heatmap_out_path)
+                diagnosis["gradcam_heatmap_url"] = f"/css/heatmap_{clean_filename}"
+                diagnosis["gradcam_explanation"] = grad_res.get("explanation", "The model focused on leaf lesion and necrotic spot regions.")
+            else:
+                diagnosis["gradcam_heatmap_url"] = None
+                diagnosis["gradcam_explanation"] = "The model focused on discolored leaf spot regions."
+        except Exception as e:
+            diagnosis["gradcam_heatmap_url"] = None
+            diagnosis["gradcam_explanation"] = "The model analyzed structural textures and leaf spot regions."
 
-    # Step 6: Save Record in SQLite Database
-    scan_id = save_leaf_scan(
-        crop=diagnosis["crop"],
-        disease=diagnosis["disease"],
-        confidence=diagnosis["confidence"],
-        severity=diagnosis["severity"],
-        is_healthy=diagnosis["is_healthy"],
-        status=final_state,
-        image_filename=clean_filename,
-        file_path=f"/data/{final_state}/{clean_filename}",
-        temp=DEFAULT_WEATHER["temperature"],
-        humidity=DEFAULT_WEATHER["humidity"],
-        rain_prob=DEFAULT_WEATHER["rain_probability"],
-        device_id=device_id
-    )
+        # Step 5: Transition File State to /data/completed or /data/critical
+        final_state = "critical" if diagnosis.get("severity") in ["Critical", "High"] else "completed"
+        transition_file_status(clean_filename, final_state, diagnosis_result=diagnosis)
 
-    diagnosis["scan_id"] = scan_id
-    diagnosis["image_url"] = f"/data/{final_state}/{clean_filename}"
-    diagnosis["memory_status"] = mem_result
-    diagnosis["storage_state"] = final_state
+        # Step 6: Save Record in SQLite Database
+        scan_id = save_leaf_scan(
+            crop=diagnosis.get("crop", "Unknown"),
+            disease=diagnosis.get("disease", "Unknown"),
+            confidence=diagnosis.get("confidence", 0.0),
+            severity=diagnosis.get("severity", "Normal"),
+            is_healthy=diagnosis.get("is_healthy", False),
+            status=final_state,
+            image_filename=clean_filename,
+            file_path=f"/data/{final_state}/{clean_filename}",
+            temp=DEFAULT_WEATHER["temperature"],
+            humidity=DEFAULT_WEATHER["humidity"],
+            rain_prob=DEFAULT_WEATHER["rain_probability"],
+            device_id=device_id
+        )
 
-    return jsonify(diagnosis)
+        diagnosis["scan_id"] = scan_id
+        diagnosis["image_url"] = f"/data/{final_state}/{clean_filename}"
+        diagnosis["memory_status"] = mem_result
+        diagnosis["storage_state"] = final_state
+
+        return jsonify(diagnosis)
+
+    except Exception as err:
+        print(f"Error in analyze_disease: {err}")
+        return jsonify({"error": f"Disease analysis error: {str(err)}"}), 500
 
 
 @app.route('/api/evaluate', methods=['GET'])
