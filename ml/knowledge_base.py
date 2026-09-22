@@ -4,138 +4,36 @@ Prevents LLM hallucination by supplying verified agricultural management guidanc
 """
 
 KNOWLEDGE_BASE = {
-    "Tomato___Early_blight": {
-        "crop": "Tomato",
-        "disease": "Early Blight (Alternaria solani)",
-        "is_healthy": False,
-        "severity": "Moderate",
-        "explanation": "Early blight is caused by the fungus Alternaria solani. It produces target-like dark concentric rings on mature leaves, causing yellowing and premature leaf loss.",
-        "actions": [
-            "Prune infected lower leaves to restrict fungal spore splash.",
-            "Apply copper-based fungicide or Mancozeb at 7-10 day intervals.",
-            "Avoid overhead irrigation; water directly near the plant root zone."
-        ],
-        "prevention": [
-            "Rotate tomato crops with non-solanaceous crops every 2-3 years.",
-            "Apply organic mulch to reduce soil splashing onto foliage.",
-            "Ensure wide plant spacing (45-60cm) for optimal air circulation."
-        ]
-    },
-    "Tomato___Late_blight": {
-        "crop": "Tomato",
-        "disease": "Late Blight (Phytophthora infestans)",
-        "is_healthy": False,
-        "severity": "Critical",
-        "explanation": "Late blight is a destructive water-mold disease causing rapid brown water-soaked lesions on leaves and stems, often accompanied by white fungal growth in high humidity.",
-        "actions": [
-            "Immediately isolate infected plants and destroy heavily diseased tissue.",
-            "Spray systemic fungicide such as Metalaxyl or Dimethomorph combined with Mancozeb.",
-            "Strictly suspend all overhead sprinkler watering."
-        ],
-        "prevention": [
-            "Plant late-blight resistant tomato varieties (e.g., Mountain Magic, Defiant).",
-            "Monitor field humidity closely during rainy spells.",
-            "Ensure field drainage is adequate to prevent water stagnation."
-        ]
-    },
-    "Tomato___Leaf_Mold": {
-        "crop": "Tomato",
-        "disease": "Leaf Mold (Passalora fulva)",
-        "is_healthy": False,
-        "severity": "Moderate",
-        "explanation": "Leaf mold thrives in high relative humidity (>85%). Pale green/yellow spots appear on the upper leaf surface with velvety olive-green spore masses underneath.",
-        "actions": [
-            "Increase ventilation and air movement around plants.",
-            "Apply preventative sulfur or copper fungicides.",
-            "Remove lower foliage showing severe velvet mold growth."
-        ],
-        "prevention": [
-            "Maintain canopy humidity below 85% with proper pruning.",
-            "Use drip irrigation instead of sprinkler systems.",
-            "Space plants widely in rows."
-        ]
-    },
-    "Tomato___Septoria_leaf_spot": {
-        "crop": "Tomato",
-        "disease": "Septoria Leaf Spot (Septoria lycopersici)",
-        "is_healthy": False,
-        "severity": "Moderate",
-        "explanation": "Septoria leaf spot causes numerous small circular spots with dark borders and grey/white centers, leading to leaf drop from the bottom upward.",
-        "actions": [
-            "Remove infected lower leaves promptly.",
-            "Apply Chlorothalonil or copper-based fungicide spray.",
-            "Keep foliage dry during watering."
-        ],
-        "prevention": [
-            "Clear crop residue immediately post-harvest.",
-            "Rotate crops annually.",
-            "Mulch around plant bases."
-        ]
-    },
-    "Tomato___Bacterial_spot": {
-        "crop": "Tomato",
+    "Pepper__bell___Bacterial_spot": {
+        "crop": "Pepper (Bell)",
         "disease": "Bacterial Spot (Xanthomonas spp.)",
         "is_healthy": False,
         "severity": "High",
-        "explanation": "Bacterial spot forms dark water-soaked leaf spots that turn brown and necrotic. It spreads rapidly through rain splash and farm tools.",
+        "explanation": "Bacterial spot causes small, dark, water-soaked spots on bell pepper leaves and fruit, leading to leaf drop and fruit lesions.",
         "actions": [
-            "Spray fixed copper mixed with Mancozeb to control bacterial spread.",
-            "Sanitize tools and hands with alcohol solution between plants.",
-            "Avoid handling plants while foliage is wet."
+            "Apply copper-based bactericides combined with Mancozeb at 7-10 day intervals.",
+            "Remove and destroy severely infected plant leaves.",
+            "Avoid overhead irrigation to keep foliage dry."
         ],
         "prevention": [
-            "Use certified pathogen-free seeds.",
-            "Implement a 2-year crop rotation.",
-            "Avoid sprinkler irrigation."
+            "Use certified disease-free seeds and transplants.",
+            "Rotate bell pepper crops with non-solanaceous crops for 2-3 years.",
+            "Maintain proper plant spacing for air circulation."
         ]
     },
-    "Tomato___Tomato_Yellow_Leaf_Curl_Virus": {
-        "crop": "Tomato",
-        "disease": "Yellow Leaf Curl Virus (TYLCV)",
-        "is_healthy": False,
-        "severity": "Critical",
-        "explanation": "TYLCV is transmitted by whiteflies (Bemisia tabaci). Infected plants exhibit severe leaf curling, yellowing margins, stunting, and reduced fruit yield.",
-        "actions": [
-            "Control whitefly vectors using yellow sticky traps and neem oil spray.",
-            "Apply imidacloprid or insecticidal soap if whitefly density is high.",
-            "Rogue out and bury severely stunted viral plants."
-        ],
-        "prevention": [
-            "Use fine insect mesh nets over nursery beds.",
-            "Plant TYLCV-tolerant hybrid varieties.",
-            "Keep fields free from weed hosts."
-        ]
-    },
-    "Tomato___Tomato_mosaic_virus": {
-        "crop": "Tomato",
-        "disease": "Tomato Mosaic Virus (ToMV)",
-        "is_healthy": False,
-        "severity": "High",
-        "explanation": "ToMV causes mottling, light and dark green mosaic patterns, and distorted fern-like foliage. It spreads easily via mechanical contact.",
-        "actions": [
-            "Disinfect tools, hands, and stakes with trisodium phosphate or milk solution.",
-            "Remove infected plants immediately to prevent mechanical transmission.",
-            "Prohibit tobacco use near plants (tobacco can harbor mosaic virus)."
-        ],
-        "prevention": [
-            "Select ToMV-resistant seeds.",
-            "Sterilize seed trays and farm implements.",
-            "Maintain clean field borders."
-        ]
-    },
-    "Tomato___healthy": {
-        "crop": "Tomato",
+    "Pepper__bell___healthy": {
+        "crop": "Pepper (Bell)",
         "disease": "Healthy Leaf",
         "is_healthy": True,
         "severity": "None",
-        "explanation": "Foliage is green, vigorous, and free from dark lesions, yellowing, or viral distortion.",
+        "explanation": "Bell pepper foliage is vibrant green, firm, and showing no signs of bacterial or fungal infection.",
         "actions": [
-            "Maintain balanced N-P-K fertilization and consistent soil moisture.",
-            "Conduct routine leaf scans every 5-7 days."
+            "Continue regular watering and balanced N-P-K fertilization.",
+            "Perform weekly routine field inspections."
         ],
         "prevention": [
-            "Keep soil healthy with organic compost.",
-            "Ensure good drainage and air flow."
+            "Maintain drip irrigation directly to root zones.",
+            "Apply organic mulch around bases."
         ]
     },
     "Potato___Early_blight": {
@@ -143,15 +41,15 @@ KNOWLEDGE_BASE = {
         "disease": "Early Blight (Alternaria solani)",
         "is_healthy": False,
         "severity": "Moderate",
-        "explanation": "Early blight forms dark brown concentric rings on older potato leaves. It reduces tuber size if defoliation occurs before crop maturity.",
+        "explanation": "Early blight produces brown concentric target-board spots on mature lower potato leaves, causing yellowing and defoliation.",
         "actions": [
-            "Spray Mancozeb or Chlorothalonil fungicide.",
-            "Maintain optimal plant nutrition (nitrogen & potassium levels)."
+            "Prune infected lower foliage to reduce spore splash.",
+            "Apply Mancozeb or Chlorothalonil fungicide spray.",
+            "Ensure foliage dries quickly after rain."
         ],
         "prevention": [
-            "Use certified disease-free seed tubers.",
-            "Destroy potato vine residue after harvest.",
-            "Rotate fields with maize or wheat."
+            "Rotate potato fields with corn or grain crops.",
+            "Maintain optimal nitrogen fertility."
         ]
     },
     "Potato___Late_blight": {
@@ -159,16 +57,15 @@ KNOWLEDGE_BASE = {
         "disease": "Late Blight (Phytophthora infestans)",
         "is_healthy": False,
         "severity": "Critical",
-        "explanation": "A destructive water-mold disease causing fast-spreading dark water-soaked patches. It can wipe out potato canopies and infect tubers in wet weather.",
+        "explanation": "Late blight is a severe water-mold disease causing dark, water-soaked spots with white fungal mold underneath in humid weather.",
         "actions": [
-            "Spray systemic fungicides (Cymoxanil + Mancozeb or Metalaxyl) immediately.",
-            "Hill up soil around potato stems to protect developing tubers from spores.",
-            "Cut and remove infected haulms if harvest is near."
+            "Destroy infected potato vines immediately to protect tubers.",
+            "Apply systemic Metalaxyl or Dimethomorph fungicide.",
+            "Suspend overhead sprinkler irrigation."
         ],
         "prevention": [
-            "Plant certified late-blight resistant seed tubers.",
-            "Avoid excessive nitrogen fertilization which creates dense humid canopies.",
-            "Monitor weather alerts for high humidity and rainfall."
+            "Plant certified late-blight resistant potato seed tubers.",
+            "Monitor regional late blight forecasting advisories."
         ]
     },
     "Potato___healthy": {
@@ -176,229 +73,172 @@ KNOWLEDGE_BASE = {
         "disease": "Healthy Leaf",
         "is_healthy": True,
         "severity": "None",
-        "explanation": "Leaf tissue is healthy, dark green, and free from blights or bacterial wilt.",
+        "explanation": "Potato foliage is healthy with uniform green leaf canopy.",
         "actions": [
-            "Maintain regular irrigation during tuber initiation.",
-            "Continue periodic field monitoring."
+            "Maintain balanced hill cultivation and soil moisture.",
+            "Inspect weekly for early pest signs."
         ],
         "prevention": [
-            "Hill soil properly around tubers.",
-            "Practice proper crop rotation."
+            "Ensure proper soil drainage.",
+            "Avoid excessive nitrogen late in season."
         ]
     },
-    "Corn_(maize)___Common_rust_": {
-        "crop": "Maize",
-        "disease": "Common Rust (Puccinia sorghi)",
+    "Tomato_Bacterial_spot": {
+        "crop": "Tomato",
+        "disease": "Bacterial Spot (Xanthomonas spp.)",
+        "is_healthy": False,
+        "severity": "High",
+        "explanation": "Bacterial spot produces small, dark brown necrotic spots surrounded by yellow halos on tomato foliage.",
+        "actions": [
+            "Apply fixed copper mixed with Mancozeb to restrict bacterial spread.",
+            "Sanitize pruning shears between plants.",
+            "Avoid touching foliage while plants are wet."
+        ],
+        "prevention": [
+            "Use certified pathogen-free seeds.",
+            "Rotate crops annually with non-solanaceous plants."
+        ]
+    },
+    "Tomato_Early_blight": {
+        "crop": "Tomato",
+        "disease": "Early Blight (Alternaria solani)",
         "is_healthy": False,
         "severity": "Moderate",
-        "explanation": "Common rust creates reddish-brown powdery pustules on upper and lower leaf surfaces. It thrives in cool, moist weather.",
+        "explanation": "Early blight produces dark target-like concentric rings on mature leaves, causing yellowing and premature leaf drop.",
         "actions": [
-            "Apply foliar fungicide (Propiconazole or Azoxystrobin) if pustules cover >10% of leaf area before flowering.",
-            "Ensure balanced fertilization."
+            "Prune infected lower leaves to restrict fungal spore splash.",
+            "Apply copper-based fungicide or Mancozeb at 7-10 day intervals.",
+            "Water directly near plant root zone."
         ],
         "prevention": [
-            "Plant resistant maize hybrids.",
-            "Sow early in the season to avoid peak rust spore counts."
+            "Rotate tomato crops with non-solanaceous crops every 2-3 years.",
+            "Apply organic mulch around bases."
         ]
     },
-    "Corn_(maize)___Northern_Leaf_Blight": {
-        "crop": "Maize",
-        "disease": "Northern Corn Leaf Blight (Exserohilum turcicum)",
-        "is_healthy": False,
-        "severity": "High",
-        "explanation": "Produces large, elliptical cigar-shaped grayish-green lesions on leaves, reducing photosynthetic area significantly during grain filling.",
-        "actions": [
-            "Apply recommended strobilurin or triazole fungicides at onset of symptoms.",
-            "Incorporate crop residue post-harvest."
-        ],
-        "prevention": [
-            "Use resistant maize cultivars.",
-            "Rotate with non-host crops like legumes or cotton."
-        ]
-    },
-    "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": {
-        "crop": "Maize",
-        "disease": "Gray Leaf Spot (Cercospora zeae-maydis)",
-        "is_healthy": False,
-        "severity": "High",
-        "explanation": "Forms rectangular tan/gray leaf spots bounded by leaf veins. Can cause extensive leaf death under warm humid conditions.",
-        "actions": [
-            "Spray foliar fungicides at silking if disease pressure is high.",
-            "Promote field residue decomposition."
-        ],
-        "prevention": [
-            "Select gray-leaf-spot resistant hybrids.",
-            "Practice 2-year crop rotation."
-        ]
-    },
-    "Corn_(maize)___healthy": {
-        "crop": "Maize",
-        "disease": "Healthy Leaf",
-        "is_healthy": True,
-        "severity": "None",
-        "explanation": "Maize canopy is green, healthy, and vigorous.",
-        "actions": [
-            "Maintain nitrogen side-dressing during vegetative stage.",
-            "Monitor soil moisture."
-        ],
-        "prevention": [
-            "Use good quality hybrid seeds.",
-            "Keep fields weed-free."
-        ]
-    },
-    "Cotton___Bacterial_blight": {
-        "crop": "Cotton",
-        "disease": "Bacterial Blight (Xanthomonas citri pv. malvacearum)",
-        "is_healthy": False,
-        "severity": "High",
-        "explanation": "Bacterial blight causes angular, water-soaked dark leaf spots bounded by veins, and can lead to blackarm lesions on stems and boll rot.",
-        "actions": [
-            "Spray Copper Oxychloride + Streptocycline (100 ppm).",
-            "Avoid field operations while plants are wet with dew."
-        ],
-        "prevention": [
-            "Delint seed with acid before sowing.",
-            "Use resistant cotton cultivars (e.g., Bt cotton hybrids).",
-            "Destroy infected crop residue."
-        ]
-    },
-    "Cotton___Leaf_curl_virus": {
-        "crop": "Cotton",
-        "disease": "Cotton Leaf Curl Virus (CLCuV)",
+    "Tomato_Late_blight": {
+        "crop": "Tomato",
+        "disease": "Late Blight (Phytophthora infestans)",
         "is_healthy": False,
         "severity": "Critical",
-        "explanation": "Transmitted by whitefly vector (Bemisia tabaci). Causes upward curling of leaves, leaf enations (thickening of veins underneath), and stunting.",
+        "explanation": "Late blight is a destructive water-mold disease causing rapid brown water-soaked lesions on leaves and stems.",
         "actions": [
-            "Spray systemic insecticides (Diafenthiuron or Thiamethoxam) to reduce whiteflies.",
-            "Eradicate weed hosts like Abutilon and Solanum around fields.",
-            "Uproot severely deformed viral plants."
+            "Isolate infected plants and destroy heavily diseased tissue.",
+            "Spray systemic fungicide such as Metalaxyl or Dimethomorph.",
+            "Suspend overhead sprinkler watering."
         ],
         "prevention": [
-            "Grow CLCuV-resistant cotton varieties.",
-            "Maintain yellow sticky traps in fields.",
-            "Avoid excessive nitrogen application."
+            "Plant resistant tomato varieties.",
+            "Ensure field drainage is adequate."
         ]
     },
-    "Cotton___healthy": {
-        "crop": "Cotton",
-        "disease": "Healthy Leaf",
-        "is_healthy": True,
-        "severity": "None",
-        "explanation": "Cotton leaves are green, broad, and free from vein thickening or angular lesions.",
+    "Tomato_Leaf_Mold": {
+        "crop": "Tomato",
+        "disease": "Leaf Mold (Passalora fulva)",
+        "is_healthy": False,
+        "severity": "Moderate",
+        "explanation": "Leaf mold produces pale green/yellow spots on upper leaf surfaces with olive-green velvety mold underneath.",
         "actions": [
-            "Provide timely irrigation during flowering and boll formation.",
-            "Scout weekly for sucking pests."
+            "Increase canopy ventilation and air movement.",
+            "Apply sulfur or copper fungicides.",
+            "Remove lower foliage showing severe mold."
         ],
         "prevention": [
-            "Maintain balanced potash and nitrogen levels.",
-            "Ensure proper field drainage."
+            "Maintain humidity below 85% with proper pruning.",
+            "Use drip irrigation."
         ]
     },
-    "Rice___Bacterial_leaf_blight": {
-        "crop": "Rice",
-        "disease": "Bacterial Leaf Blight (Xanthomonas oryzae pv. oryzae)",
+    "Tomato_Septoria_leaf_spot": {
+        "crop": "Tomato",
+        "disease": "Septoria Leaf Spot (Septoria lycopersici)",
+        "is_healthy": False,
+        "severity": "Moderate",
+        "explanation": "Septoria leaf spot causes numerous small circular spots with grey centers and dark borders.",
+        "actions": [
+            "Remove infected lower leaves promptly.",
+            "Apply Chlorothalonil or copper spray.",
+            "Keep foliage dry during irrigation."
+        ],
+        "prevention": [
+            "Clear crop residue post-harvest.",
+            "Rotate crops annually."
+        ]
+    },
+    "Tomato_Spider_mites_Two_spotted_spider_mite": {
+        "crop": "Tomato",
+        "disease": "Two-Spotted Spider Mites (Tetranychus urticae)",
+        "is_healthy": False,
+        "severity": "High",
+        "explanation": "Spider mites cause yellow speckling/stippling on leaf surfaces accompanied by fine silken webbing under hot dry conditions.",
+        "actions": [
+            "Spray insecticidal soap, neem oil, or miticide (Abamectin).",
+            "Increase ambient humidity around plants.",
+            "Remove heavily infested leaves."
+        ],
+        "prevention": [
+            "Avoid over-fertilizing with high nitrogen.",
+            "Introduce predatory mites (Phytoseiulus persimilis)."
+        ]
+    },
+    "Tomato__Target_Spot": {
+        "crop": "Tomato",
+        "disease": "Target Spot (Corynespora cassiicola)",
+        "is_healthy": False,
+        "severity": "Moderate",
+        "explanation": "Target spot produces circular brown lesions with light brown centers and dark yellow halos.",
+        "actions": [
+            "Apply Azoxystrobin or Chlorothalonil fungicide.",
+            "Prune canopy for sunlight penetration."
+        ],
+        "prevention": [
+            "Eliminate solanaceous weed hosts.",
+            "Rotate tomato crops regularly."
+        ]
+    },
+    "Tomato__Tomato_YellowLeaf__Curl_Virus": {
+        "crop": "Tomato",
+        "disease": "Tomato Yellow Leaf Curl Virus (TYLCV)",
         "is_healthy": False,
         "severity": "Critical",
-        "explanation": "Causes yellowing and drying of leaves starting from tips and margins, producing wavy, water-soaked streaks. Can cause 'kresek' wilt in seedlings.",
+        "explanation": "TYLCV is transmitted by whiteflies, causing severe upward leaf curling, yellowing margins, and stunted growth.",
         "actions": [
-            "Drain the paddy field for 3-4 days to reduce humidity.",
-            "Spray Copper Hydroxide or Streptomycin sulfate.",
-            "Avoid high nitrogen top-dressing during disease outbreak."
+            "Control whitefly vectors using yellow sticky traps and neem oil.",
+            "Apply insecticidal soap or Imidacloprid if whitefly density is high.",
+            "Remove virus-infected plants to stop vector spreading."
         ],
         "prevention": [
-            "Plant resistant rice varieties (e.g., IR64, Swarna Sub1).",
-            "Apply balanced potassium fertilization.",
-            "Keep field bunds free from weed hosts."
+            "Plant TYLCV-resistant tomato hybrids.",
+            "Use fine insect mesh nets over nursery beds."
         ]
     },
-    "Rice___Brown_spot": {
-        "crop": "Rice",
-        "disease": "Brown Spot (Bipolaris oryzae)",
+    "Tomato__Tomato_mosaic_virus": {
+        "crop": "Tomato",
+        "disease": "Tomato Mosaic Virus (ToMV)",
         "is_healthy": False,
-        "severity": "Moderate",
-        "explanation": "Produces oval, reddish-brown spots with yellow halos across leaves. Common in nutrient-deficient or water-stressed paddy soils.",
+        "severity": "High",
+        "explanation": "Tomato mosaic virus causes light and dark green mottled leaf patterning, leaf blistering, and stunting.",
         "actions": [
-            "Apply potassium and zinc fertilizers to soil.",
-            "Spray Mancozeb or Edifenphos at early tillering."
+            "Isolate and discard infected plants immediately.",
+            "Disinfect farm tools and hands with milk/trisodium phosphate solution.",
+            "Do not smoke or use tobacco products near plants."
         ],
         "prevention": [
-            "Correct soil nutrient deficiencies.",
-            "Treat seed with Thiram or Carbendazim before sowing."
+            "Plant mosaic-resistant tomato varieties.",
+            "Sanitize seed beds before planting."
         ]
     },
-    "Rice___Leaf_smut": {
-        "crop": "Rice",
-        "disease": "Leaf Smut (Entyloma oryzae)",
-        "is_healthy": False,
-        "severity": "Low",
-        "explanation": "Forms tiny, black linear spots (sori) on leaf blades. Generally a minor disease unless infection is very severe late in the season.",
-        "actions": [
-            "Usually no fungicide needed unless infection spreads to upper leaves.",
-            "Apply recommended foliar copper spray if severe."
-        ],
-        "prevention": [
-            "Avoid over-fertilization with nitrogen.",
-            "Clear crop stubble after harvest."
-        ]
-    },
-    "Rice___healthy": {
-        "crop": "Rice",
+    "Tomato_healthy": {
+        "crop": "Tomato",
         "disease": "Healthy Leaf",
         "is_healthy": True,
         "severity": "None",
-        "explanation": "Paddy blades are bright green, upright, and free from bacterial streaks or brown spots.",
+        "explanation": "Tomato foliage is healthy, showing vibrant green leaf surface without lesions or viral mottle.",
         "actions": [
-            "Maintain optimal standing water depth (2-5cm).",
-            "Apply scheduled split nitrogen application."
+            "Continue regular drip irrigation and balanced fertilization.",
+            "Monitor crop weekly."
         ],
         "prevention": [
-            "Use certified seed.",
-            "Maintain proper plant density."
-        ]
-    },
-    "Wheat___Leaf_rust": {
-        "crop": "Wheat",
-        "disease": "Leaf Rust (Puccinia triticina)",
-        "is_healthy": False,
-        "severity": "Moderate",
-        "explanation": "Causes small, round orange-brown pustules randomly scattered on the upper leaf surface of wheat.",
-        "actions": [
-            "Apply Tebuconazole or Propiconazole foliar fungicide spray.",
-            "Monitor flag leaf infection closely."
-        ],
-        "prevention": [
-            "Plant rust-resistant wheat varieties.",
-            "Avoid late sowing."
-        ]
-    },
-    "Wheat___Powdery_mildew": {
-        "crop": "Wheat",
-        "disease": "Powdery Mildew (Blumeria graminis)",
-        "is_healthy": False,
-        "severity": "Moderate",
-        "explanation": "Forms white to gray powdery patches on leaf sheaths and blades under humid, dense canopy conditions.",
-        "actions": [
-            "Spray Triadimefon or Sulfur-based fungicide.",
-            "Reduce canopy humidity if possible."
-        ],
-        "prevention": [
-            "Maintain proper seed rate to prevent overcrowded stands.",
-            "Select resistant cultivars."
-        ]
-    },
-    "Wheat___healthy": {
-        "crop": "Wheat",
-        "disease": "Healthy Leaf",
-        "is_healthy": True,
-        "severity": "None",
-        "explanation": "Wheat foliage is green and healthy.",
-        "actions": [
-            "Irrigate at critical stages (Crown Root Initiation, Booting, Grain Filling).",
-            "Routine monitoring."
-        ],
-        "prevention": [
-            "Practice balanced soil fertilization.",
-            "Use clean seeds."
+            "Maintain clean field practices.",
+            "Mulch around plant bases."
         ]
     }
 }
@@ -407,7 +247,7 @@ DEFAULT_DIAGNOSIS = {
     "crop": "General Crop",
     "disease": "Unspecified Leaf Spot / Healthy",
     "is_healthy": True,
-    "severity": "Low",
+    "severity": "None",
     "explanation": "Leaf image processed successfully. No severe pathogen pattern detected.",
     "actions": [
         "Continue monitoring leaf condition every 5-7 days.",
@@ -424,19 +264,20 @@ def get_diagnosis(class_name: str) -> dict:
     """Retrieve controlled diagnosis and action plan for a given class label."""
     if class_name in KNOWLEDGE_BASE:
         return KNOWLEDGE_BASE[class_name]
-    
-    # Generic fallback based on label parsing
-    parts = class_name.split("___")
-    crop = parts[0].replace("_", " ") if len(parts) > 0 else "Crop"
-    dis = parts[1].replace("_", " ") if len(parts) > 1 else "Condition"
+
+    # Clean fallback based on label parsing
+    clean_label = class_name.replace("___", "_").replace("__", "_")
+    parts = clean_label.split("_")
+    crop = parts[0] if len(parts) > 0 else "Crop"
+    dis = " ".join(parts[1:]) if len(parts) > 1 else "Condition"
     is_healthy = "healthy" in dis.lower()
-    
+
     return {
-        "crop": crop,
-        "disease": dis,
+        "crop": crop.capitalize(),
+        "disease": dis.title(),
         "is_healthy": is_healthy,
         "severity": "None" if is_healthy else "Moderate",
-        "explanation": f"Detected {dis} on {crop} leaf.",
+        "explanation": f"Detected {dis} on {crop} foliage.",
         "actions": [
             "Monitor affected plants regularly.",
             "Consult local agricultural extension officer if symptoms spread."
