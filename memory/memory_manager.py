@@ -10,11 +10,11 @@ TOTAL_RAM_MB = 512.0  # Simulated Edge Device RAM Capacity (e.g. 512 MB)
 
 MODEL_MEMORY_FOOTPRINTS = {
     "EfficientNet-B0": 180.0,
-    "ResNet-50": 340.0,
+    "Offline_Agronomy_PDFs": 350.0,
+    "Farmer_Assistance_NLP": 95.0,
     "Image_Compressor": 45.0,
     "Sensor_Processor": 25.0,
-    "Cloud_Sync_Worker": 35.0,
-    "Farmer_Assistance_NLP": 95.0
+    "Cloud_Sync_Worker": 35.0
 }
 
 class MemoryManager:

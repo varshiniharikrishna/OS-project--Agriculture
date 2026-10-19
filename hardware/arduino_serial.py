@@ -38,6 +38,8 @@ class ArduinoSerialManager:
         self.sensor_state = "CLEAR"
         self.obstacle_detected = False
         self.raw_pin_value = 1  # Active-low: 1 = Clear, 0 = Detected
+        self.distance_cm: Optional[float] = None
+        self.sensor_type = "4-Wire Ultrasonic Sonar (HC-SR04)"
         self.last_event = "SYSTEM_INIT"
         self.last_event_time = time.time()
         self.event_count = 0
@@ -168,7 +170,7 @@ class ArduinoSerialManager:
                 time.sleep(2.0)
 
     def _process_serial_line(self, line: str):
-        """Parse JSON packet received from Arduino Uno."""
+        """Parse JSON packet received from Arduino Uno (IR or Sonar)."""
         try:
             data = json.loads(line)
             with self.lock:
@@ -176,6 +178,14 @@ class ArduinoSerialManager:
                 self.obstacle_detected = bool(data.get("obstacle", False))
                 self.sensor_state = data.get("state", "CLEAR")
                 self.last_event = data.get("event", "STATUS")
+                if "sensor" in data:
+                    s_name = str(data.get("sensor")).upper()
+                    self.sensor_type = "4-Wire Ultrasonic Sonar (HC-SR04)" if "SONAR" in s_name else "Active-Low IR Obstacle Sensor"
+                if "distance_cm" in data:
+                    try:
+                        self.distance_cm = round(float(data["distance_cm"]), 1)
+                    except (ValueError, TypeError):
+                        pass
                 self.last_event_time = time.time()
                 if self.obstacle_detected:
                     self.event_count += 1
@@ -196,19 +206,20 @@ class ArduinoSerialManager:
                 crop="Tomato",
                 severity="High",
                 disease_risk=0.88,
-                device_id="Arduino-IR-Node-01"
+                device_id="Arduino-Sonar-Node-01"
             )
         except Exception:
             pass
 
     def trigger_simulated_obstacle(self, state: bool = True) -> Dict[str, Any]:
         """
-        Allows software simulation of the IR obstacle sensor when physical
+        Allows software simulation of the obstacle sensor when physical
         hardware is not connected. Enables laptop-only end-to-end testing.
         """
         with self.lock:
             self.obstacle_detected = state
             self.raw_pin_value = 0 if state else 1
+            self.distance_cm = 8.5 if state else 42.0
             self.sensor_state = "DETECTED" if state else "CLEAR"
             self.last_event = "SIMULATED_OBSTACLE" if state else "SIMULATED_CLEAR"
             self.last_event_time = time.time()
@@ -228,11 +239,15 @@ class ArduinoSerialManager:
                 "target_board": "Arduino Uno",
                 "assigned_port": self.port or "Not Connected (Scan Available)",
                 "baud_rate": self.baud_rate,
-                "sensor_type": "Active-Low Infrared (IR) Obstacle Avoidance",
+                "sensor_type": self.sensor_type,
+                "distance_cm": self.distance_cm,
                 "pin_configuration": {
                     "vcc": "5V",
                     "gnd": "GND",
                     "out_pin": "Digital Pin 2",
+                    "trig_pin": "Digital Pin 9 (TRIG pulse)",
+                    "echo_pin": "Digital Pin 10 (ECHO pulse)",
+                    "ir_fallback_pin": "Digital Pin 2",
                     "led_pin": "Digital Pin 13 (Built-in Indicator)"
                 },
                 "sensor_state": self.sensor_state,

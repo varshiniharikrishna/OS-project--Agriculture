@@ -332,12 +332,16 @@
                 <i class="fa-solid fa-memory"></i> 1. RAM Manager (512 MB LRU Cache)
               </h4>
               <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">
-                Simulates model weight loading into constrained 512 MB edge RAM using Least Recently Used (LRU) cache eviction.
+                Demonstrates edge memory management: The OS swaps between the <strong>Leaf Disease Classifier</strong> and the <strong>Offline Agronomy PDF Manuals</strong> in 512 MB RAM using LRU eviction.
               </p>
 
-              <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <button class="btn btn-outline" onclick="loadModelMemory('EfficientNet-B0')">Load EfficientNet (180MB)</button>
-                <button class="btn btn-outline" onclick="loadModelMemory('ResNet-50')">Load ResNet50 (340MB)</button>
+              <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                <button class="btn btn-outline" style="font-size: 0.82rem;" onclick="loadModelMemory('EfficientNet-B0')">
+                  <i class="fa-solid fa-leaf"></i> Load Disease Model (180MB)
+                </button>
+                <button class="btn btn-outline" style="font-size: 0.82rem;" onclick="loadModelMemory('Offline_Agronomy_PDFs')">
+                  <i class="fa-solid fa-book-open"></i> Load Offline PDF Index (350MB)
+                </button>
               </div>
 
               <div style="font-size: 0.88rem; font-weight: 700; margin-bottom: 6px;">
@@ -349,7 +353,7 @@
 
               <div style="font-size: 0.85rem; font-weight: 700; margin-bottom: 4px;">LRU Eviction History:</div>
               <ul id="lru-eviction-list" style="font-size: 0.82rem; color: var(--text-muted); padding-left: 20px;">
-                <li>No evictions recorded yet.</li>
+                <li>No evictions recorded yet. (Click buttons above to test swapping)</li>
               </ul>
             </div>
 
@@ -359,12 +363,16 @@
                 <i class="fa-solid fa-lock"></i> 2. Deadlock Arbitrator (Banker's Algorithm)
               </h4>
               <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">
-                Arbitrates resource contention (CPU, RAM, ML Engine, Network) across edge nodes (Camera 1, Camera 2, Drone) to ensure safe execution states.
+                Arbitrates resource contention (CPU, RAM, Neural Engine, Network) across edge tasks (Leaf Scanner, Soil Sensor, Cloud Sync, Farmer PDF Query) to prevent deadlocks.
               </p>
 
-              <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <button class="btn btn-outline" onclick="runDeadlockCheck('safe')">Test Safe State Scenario</button>
-                <button class="btn btn-outline" onclick="runDeadlockCheck('deadlock_risk')">Test Unsafe Request</button>
+              <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                <button class="btn btn-outline" style="font-size: 0.82rem;" onclick="runDeadlockCheck('safe')">
+                  <i class="fa-solid fa-shield-halved"></i> Test Safe State Scenario
+                </button>
+                <button class="btn btn-outline" style="font-size: 0.82rem;" onclick="runDeadlockCheck('deadlock_risk')">
+                  <i class="fa-solid fa-triangle-exclamation"></i> Test Unsafe Deadlock Risk
+                </button>
               </div>
 
               <div style="font-size: 0.88rem; margin-bottom: 6px;">
@@ -1049,25 +1057,29 @@
           <!-- Left Card: Live Sensor Readings & Simulated Trigger -->
           <div class="card">
             <h4 style="font-size: 1rem; margin-bottom: 15px; color: var(--text-main);">
-              <i class="fa-solid fa-satellite-dish"></i> Active-Low IR Sensor (Digital Pin 2)
+              <i class="fa-solid fa-satellite-dish"></i> Live Sensor Telemetry (4-Wire Sonar / IR Sensor)
             </h4>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 15px;">
               <div style="background: var(--bg-main); padding: 12px; border-radius: 6px;">
                 <div style="font-size: 0.75rem; color: var(--text-muted);">Sensor State</div>
-                <div id="hw-sensor-state" style="font-size: 1.2rem; font-weight: 800; color: #15803d; margin-top: 4px;">CLEAR</div>
+                <div id="hw-sensor-state" style="font-size: 1.15rem; font-weight: 800; color: #15803d; margin-top: 4px;">CLEAR</div>
               </div>
               <div style="background: var(--bg-main); padding: 12px; border-radius: 6px;">
-                <div style="font-size: 0.75rem; color: var(--text-muted);">Raw Digital Pin 2 Value</div>
-                <div id="hw-raw-pin" style="font-size: 1.2rem; font-weight: 800; color: #0f172a; margin-top: 4px;">1 (HIGH = Clear)</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Sonar Distance</div>
+                <div id="hw-sonar-distance" style="font-size: 1.15rem; font-weight: 800; color: #0288d1; margin-top: 4px;">-- cm</div>
               </div>
               <div style="background: var(--bg-main); padding: 12px; border-radius: 6px;">
-                <div style="font-size: 0.75rem; color: var(--text-muted);">Total Detection Events</div>
-                <div id="hw-event-count" style="font-size: 1.2rem; font-weight: 800; color: #0288d1; margin-top: 4px;">0</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Raw Logic Signal</div>
+                <div id="hw-raw-pin" style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-top: 4px;">1 (Clear)</div>
               </div>
               <div style="background: var(--bg-main); padding: 12px; border-radius: 6px;">
-                <div style="font-size: 0.75rem; color: var(--text-muted);">Assigned USB Serial Port</div>
-                <div id="hw-assigned-port" style="font-size: 0.85rem; font-weight: 700; color: #475569; margin-top: 6px; word-break: break-all;">Auto-Detect Active</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Total Events</div>
+                <div id="hw-event-count" style="font-size: 1.15rem; font-weight: 800; color: #7c3aed; margin-top: 4px;">0</div>
+              </div>
+              <div style="background: var(--bg-main); padding: 12px; border-radius: 6px; grid-column: 1 / -1;">
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Assigned USB Serial Port & Detected Sensor</div>
+                <div id="hw-assigned-port" style="font-size: 0.85rem; font-weight: 700; color: #475569; margin-top: 4px; word-break: break-all;">Auto-Detect Active (4-Wire Sonar HC-SR04 & IR Ready)</div>
               </div>
             </div>
 
@@ -1078,10 +1090,10 @@
               </div>
               <div style="display: flex; gap: 10px;">
                 <button class="btn btn-primary" style="background: #b91c1c; font-size: 0.82rem; padding: 8px 12px;" onclick="simulateObstacle(true)">
-                  <i class="fa-solid fa-hand"></i> Trigger Obstacle (Pin 2 → LOW)
+                  <i class="fa-solid fa-hand"></i> Proximity Detected (&lt; 15 cm)
                 </button>
                 <button class="btn btn-outline" style="font-size: 0.82rem; padding: 8px 12px;" onclick="simulateObstacle(false)">
-                  <i class="fa-solid fa-circle-check"></i> Clear Obstacle (Pin 2 → HIGH)
+                  <i class="fa-solid fa-circle-check"></i> Path Clear (&gt; 15 cm)
                 </button>
               </div>
             </div>
@@ -1094,14 +1106,14 @@
           <!-- Right Card: Physical Wiring & Monday Integration Guide -->
           <div class="card">
             <h4 style="font-size: 1rem; margin-bottom: 12px; color: var(--text-main);">
-              <i class="fa-solid fa-plug"></i> Verified Arduino Uno Wiring Specification
+              <i class="fa-solid fa-plug"></i> Verified Arduino Uno 4-Wire Sonar Wiring
             </h4>
 
             <div class="table-responsive" style="margin-bottom: 15px;">
               <table class="data-table" style="font-size: 0.82rem;">
                 <thead>
                   <tr style="background: #f8fafc;">
-                    <th>IR Sensor Wire</th>
+                    <th>Sonar Wire (HC-SR04)</th>
                     <th>Arduino Uno Pin</th>
                     <th>Signal Function</th>
                     <th>Status</th>
@@ -1111,25 +1123,31 @@
                   <tr>
                     <td><strong>VCC</strong></td>
                     <td><strong>5V</strong> (Power)</td>
-                    <td>Module Power Supply</td>
+                    <td>Sensor Power (5V)</td>
                     <td><span style="color: #15803d; font-weight: 700;">✓ Verified</span></td>
                   </tr>
                   <tr>
                     <td><strong>GND</strong></td>
                     <td><strong>GND</strong> (Ground)</td>
-                    <td>Common Ground</td>
+                    <td>Ground Connection</td>
                     <td><span style="color: #15803d; font-weight: 700;">✓ Verified</span></td>
                   </tr>
                   <tr>
-                    <td><strong>OUT</strong></td>
-                    <td><strong>Digital Pin 2</strong></td>
-                    <td>Active-Low Obstacle Signal</td>
+                    <td><strong>TRIG</strong></td>
+                    <td><strong>Digital Pin 9</strong></td>
+                    <td>Ultrasonic Pulse Trigger</td>
+                    <td><span style="color: #15803d; font-weight: 700;">✓ Verified</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>ECHO</strong></td>
+                    <td><strong>Digital Pin 10</strong></td>
+                    <td>Echo Return Receiver</td>
                     <td><span style="color: #15803d; font-weight: 700;">✓ Verified</span></td>
                   </tr>
                   <tr>
                     <td><strong>Built-in LED</strong></td>
                     <td><strong>Digital Pin 13</strong></td>
-                    <td>Lights when obstacle detected</td>
+                    <td>Lights when obstacle &lt; 15 cm</td>
                     <td><span style="color: #15803d; font-weight: 700;">✓ Verified</span></td>
                   </tr>
                 </tbody>
@@ -1137,10 +1155,11 @@
             </div>
 
             <div style="background: #fffbeb; border: 1px solid #fef3c7; padding: 12px; border-radius: 6px; font-size: 0.82rem; line-height: 1.5;">
-              <strong style="color: #b45309;"><i class="fa-solid fa-clock"></i> Monday Integration Steps (&lt; 15 Minutes):</strong><br>
-              1. Flash <code>hardware/arduino/ir_sensor_node.ino</code> onto Arduino Uno using Arduino IDE.<br>
-              2. Connect USB-B cable to Arduino, plug USB-A into MacBook or ASUS Windows laptop.<br>
-              3. Run application: <code>python3 backend/app.py</code>. The serial listener auto-detects <code>/dev/cu.usbmodem*</code> or <code>COM*</code> automatically!
+              <strong style="color: #b45309;"><i class="fa-solid fa-clock"></i> Quick Steps (Takes &lt; 2 Minutes):</strong><br>
+              1. Open Arduino IDE, open <code>hardware/arduino/sonar_sensor_node/sonar_sensor_node.ino</code>.<br>
+              2. Select <strong>Arduino Uno</strong> + your USB port, click <strong>Upload (→)</strong>.<br>
+              3. Connect 4 wires: <strong>VCC→5V</strong>, <strong>GND→GND</strong>, <strong>TRIG→Pin 9</strong>, <strong>ECHO→Pin 10</strong>.<br>
+              4. Run Flask backend (<code>python3 backend/app.py</code>). It connects automatically over USB serial at 9600 baud!
             </div>
           </div>
         </div>

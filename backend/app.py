@@ -391,7 +391,7 @@ def validate_table7_api():
     # 2. Model Memory LRU Caching validation
     mem_start = time.time()
     memory_manager.allocate("EfficientNet-B0")
-    memory_manager.allocate("ResNet-50")
+    memory_manager.allocate("Offline_Agronomy_PDFs")
     mem_state = memory_manager.get_state()
     mem_time_ms = round((time.time() - mem_start) * 1000, 1)
 

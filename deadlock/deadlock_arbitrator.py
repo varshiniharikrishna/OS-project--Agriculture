@@ -72,7 +72,7 @@ class BankersAlgorithm:
 def simulate_deadlock_scenario(scenario_type="safe"):
     """Simulate multi-device resource contention scenarios (Safe vs Unsafe vs Prevented)."""
 
-    processes = ["Camera 1 (Disease Scan)", "Camera 2 (Disease Scan)", "Drone (20 Images)", "Farmer Query NLP"]
+    processes = ["Leaf Disease Scanner", "Soil Sensor Node", "Cloud Sync Worker", "Farmer Offline PDF Query"]
     
     # Available System Resources [CPU Cores, RAM (x100MB), ML Engine, Network Channel]
     if scenario_type == "deadlock_risk":
@@ -82,10 +82,10 @@ def simulate_deadlock_scenario(scenario_type="safe"):
 
     # Max matrix declared by tasks
     max_matrix = [
-        [2, 2, 1, 1],  # Camera 1
-        [2, 1, 1, 1],  # Camera 2
-        [3, 3, 1, 2],  # Drone
-        [1, 2, 0, 1]   # Farmer Query
+        [2, 2, 1, 1],  # Leaf Disease Scanner
+        [2, 1, 1, 1],  # Soil Sensor Node
+        [3, 3, 1, 2],  # Cloud Sync Worker
+        [1, 2, 0, 1]   # Farmer Offline PDF Query
     ]
 
     # Allocation matrix

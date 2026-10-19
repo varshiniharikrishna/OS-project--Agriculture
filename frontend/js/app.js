@@ -832,8 +832,19 @@ async function refreshHardwareStatus() {
       eventElem.innerText = hw.detection_events_total || 0;
     }
 
+    const distElem = document.getElementById('hw-sonar-distance');
+    if (distElem) {
+      if (hw.distance_cm !== null && hw.distance_cm !== undefined) {
+        distElem.innerText = `${hw.distance_cm} cm`;
+        distElem.style.color = hw.distance_cm <= 15 ? '#b91c1c' : '#0288d1';
+      } else {
+        distElem.innerText = hw.hardware_connected ? '-- cm' : '8.5 cm (Sim)';
+      }
+    }
+
     if (portElem) {
-      portElem.innerText = hw.assigned_port || 'Auto-Detect Active';
+      const typeStr = hw.sensor_type ? ` [${hw.sensor_type}]` : '';
+      portElem.innerText = `${hw.assigned_port || 'Auto-Detect Active'}${typeStr}`;
     }
   } catch (err) {
     console.error('Hardware refresh error:', err);
