@@ -1,0 +1,13 @@
+{
+  "filename": "20261017_154346_leaf_sample.jpg",
+  "original_name": "leaf_sample.jpg",
+  "timestamp": "2026-10-17 15:43:46",
+  "status": "critical",
+  "crop": "Cotton",
+  "device_id": "Edge-Camera-01",
+  "file_size_bytes": 1413,
+  "disease_prediction": "Bacterial Blight (Xanthomonas citri pv. malvacearum)",
+  "confidence": 78.5,
+  "severity": "High",
+  "last_updated": "2026-10-17 15:43:46"
+}

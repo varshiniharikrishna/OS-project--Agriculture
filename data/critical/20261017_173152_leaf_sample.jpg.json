@@ -1,0 +1,13 @@
+{
+  "filename": "20261017_173152_leaf_sample.jpg",
+  "original_name": "leaf_sample.jpg",
+  "timestamp": "2026-10-17 17:31:52",
+  "status": "critical",
+  "crop": "Tomato",
+  "device_id": "Edge-Camera-01",
+  "file_size_bytes": 1413,
+  "disease_prediction": "Tomato Mosaic Virus (ToMV)",
+  "confidence": 78.5,
+  "severity": "High",
+  "last_updated": "2026-10-17 17:31:52"
+}

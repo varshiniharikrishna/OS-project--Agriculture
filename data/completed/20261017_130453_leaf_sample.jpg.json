@@ -1,0 +1,13 @@
+{
+  "filename": "20261017_130453_leaf_sample.jpg",
+  "original_name": "leaf_sample.jpg",
+  "timestamp": "2026-10-17 13:04:53",
+  "status": "completed",
+  "crop": "Squash",
+  "device_id": "Edge-Camera-01",
+  "file_size_bytes": 1413,
+  "disease_prediction": "Powdery mildew",
+  "confidence": 78.5,
+  "severity": "Moderate",
+  "last_updated": "2026-10-17 13:04:53"
+}

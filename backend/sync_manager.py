@@ -63,4 +63,21 @@ class CloudSyncManager:
             "local_storage_stats": storage_info["summary"]
         }
 
+    def get_sync_status(self):
+        """Query current synchronization queue status."""
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM leaf_scans WHERE status != 'synced';")
+        pending = cursor.fetchone()[0]
+        cursor.execute("SELECT COUNT(*) FROM leaf_scans WHERE status = 'synced';")
+        synced = cursor.fetchone()[0]
+        conn.close()
+        return {
+            "online": self.is_online,
+            "bandwidth_kbps": self.bandwidth_kbps,
+            "pending_count": pending,
+            "synced_count": synced,
+            "mode": "Online Edge-to-Cloud Sync" if self.is_online else "Offline Local Store-and-Forward"
+        }
+
 sync_manager = CloudSyncManager()

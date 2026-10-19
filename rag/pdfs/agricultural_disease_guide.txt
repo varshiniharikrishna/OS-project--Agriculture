@@ -1,0 +1,166 @@
+AGRICULTURAL DISEASE MANAGEMENT GUIDE
+Integrated Pest Management for Major Indian Crops
+Source: Indian Council of Agricultural Research (ICAR) & FAO Reference
+
+Page 1
+
+TOMATO DISEASES
+
+Early Blight (Alternaria solani)
+
+Symptoms: Dark brown to black circular spots with concentric rings (target-board pattern) appearing first on older lower leaves. Spots are surrounded by yellow halos. As the disease progresses, infected leaves turn yellow and fall off prematurely.
+
+Environmental Conditions: Early blight is favored by warm temperatures (24–29°C), high relative humidity (>80%), and wet leaf surfaces. The fungal spores spread rapidly through rain splash, wind, and infected crop debris.
+
+Disease Management:
+- Remove and destroy infected leaves immediately to reduce spore load.
+- Apply Mancozeb (75% WP) at 2.0–2.5 g/L water at 7–10 day intervals.
+- Copper oxychloride (50% WP) at 3.0 g/L is an effective alternative fungicide.
+- Ensure adequate plant spacing (45–60 cm between plants) for air circulation.
+- Mulch around plant bases to reduce soil splash onto leaves.
+
+Precautions: Avoid overhead irrigation. Irrigate in the morning so leaves dry quickly. Do not work in fields when foliage is wet to avoid mechanical transmission.
+
+Prevention: Rotate tomato with non-solanaceous crops (maize, legumes) for at least 2–3 years. Use resistant varieties where available. Apply preventative copper-based fungicide before expected rain spells.
+
+---
+
+Page 2
+
+Late Blight (Phytophthora infestans)
+
+Symptoms: Water-soaked, pale green lesions that rapidly turn dark brown to black. White cottony sporulation visible on undersides of leaves in humid conditions. Infected stems show dark brown discoloration. Fruits develop greasy dark lesions.
+
+Environmental Conditions: Late blight thrives at 15–25°C with humidity above 90% and prolonged leaf wetness. Outbreaks commonly follow cool wet weather. This is the most destructive tomato and potato disease globally.
+
+Disease Management:
+- Apply systemic fungicides: Metalaxyl-M + Mancozeb (0.25% + 0.25%) or Cymoxanil + Mancozeb.
+- Spray at first symptom appearance and repeat every 5–7 days during wet weather.
+- Dimethomorph (50% WP) at 1.0 g/L is effective for resistant strains.
+- Immediately remove and deeply bury all infected plant material.
+- Drain flooded areas promptly.
+
+Precautions: Never compost diseased plant material. Isolate infected areas from healthy crop. Discontinue overhead irrigation immediately.
+
+Prevention: Plant certified disease-free seed/transplants. Choose late-blight resistant varieties (Mountain Magic, Defiant PhR). Monitor weather forecasts — apply protectant fungicides before predicted rain periods longer than 48 hours.
+
+---
+
+Page 3
+
+POTATO DISEASES
+
+Potato Late Blight Management
+
+Symptoms: Similar to tomato late blight. Dark water-soaked lesions on leaves and stems. Tuber infection produces brown granular rot extending from the surface. Infected tubers emit a distinctive unpleasant odor.
+
+Integrated Management Protocol:
+1. Use certified disease-free seed tubers only.
+2. Apply metalaxyl-M (Ridomil Gold) as furrow treatment before planting.
+3. Hill up soil around stems to 15–20 cm to protect tubers from spore wash-down.
+4. Spray Mancozeb 0.25% preventatively every 7 days during cool wet spells.
+5. At first sign of foliar blight, apply curative systemic fungicide within 24 hours.
+6. Harvest promptly when vines die to minimize tuber infection period.
+7. Store only blight-free tubers at 4°C with adequate ventilation.
+
+Safe Handling: The fungicide metalaxyl should not be used within 14 days of harvest. Prevent animals from grazing on treated foliage.
+
+---
+
+Page 4
+
+RICE DISEASES
+
+Bacterial Leaf Blight (Xanthomonas oryzae pv. oryzae)
+
+Symptoms: Water-soaked to yellow stripe from leaf margins and tips, progressing down the leaf blade. In severe cases ('kresek'), seedlings wilt and die within 3 weeks of transplanting. Bacterial ooze in water droplets visible in the morning.
+
+Environmental Conditions: Disease thrives at 25–30°C with high humidity (>80%). Spreads rapidly through flood water, rain splash, and mechanical damage during field operations.
+
+Management:
+- Drain the field for 3–4 days when disease is first noticed.
+- Apply potassium (K2O) fertilizer at recommended rates — potassium strengthens cell walls.
+- Spray copper hydroxide (77% WP) at 2.5 g/L or streptomycin sulfate at 100 ppm.
+- Avoid high nitrogen application during disease outbreak as it promotes soft susceptible tissue.
+
+Prevention: Plant resistant varieties (IR64, Swarna Sub1, BPT-5204). Maintain proper field drainage. Use clean certified seed. Avoid water movement from infected to healthy fields.
+
+Safety Note: Streptomycin is an antibiotic. Use strictly within prescribed doses. Observe 10-day pre-harvest interval.
+
+---
+
+Page 5
+
+MAIZE / CORN DISEASES
+
+Gray Leaf Spot (Cercospora zeae-maydis)
+
+Symptoms: Rectangular, tan-to-gray lesions bounded by leaf veins. Lesions may coalesce in severe infections causing extensive leaf death (blighting). Disease typically appears on lower leaves first and progresses upward.
+
+Environmental Conditions: Warm temperatures (25–30°C), high humidity, heavy dew, and dense canopies favor this disease. Minimum tillage with crop residue retention increases disease risk by providing overwintering inoculum.
+
+Management:
+- Apply foliar fungicide (Propiconazole 25% EC at 1.0 mL/L) at silking if disease pressure is high.
+- Strobilurin fungicides (Azoxystrobin) give excellent control when applied preventatively.
+- Incorporate crop residue post-harvest where feasible.
+
+Prevention: Plant resistant hybrid varieties. Rotate with non-host crops (soybean, legumes) for at least one season. Avoid excessively dense planting populations.
+
+---
+
+Page 6
+
+COTTON DISEASES
+
+Cotton Leaf Curl Virus (CLCuV) — Vector Management
+
+Symptoms: Upward or downward curling of leaves, thickening and swelling of veins (enations visible as cup-like structures beneath leaves), and stunting of plants. Severely affected plants fail to produce bolls.
+
+Cause and Transmission: CLCuV is transmitted exclusively by the whitefly Bemisia tabaci. There is no direct plant-to-plant transmission. Control depends entirely on vector (whitefly) management.
+
+Management Protocol:
+1. Install yellow sticky traps at 10 per acre to monitor and reduce adult whitefly populations.
+2. Spray imidacloprid (17.8% SL) at 0.5 mL/L at early signs of whitefly infestation.
+3. Alternatively, apply thiamethoxam (25% WG) at 0.3 g/L.
+4. Uproot and destroy severely infected plants immediately — they serve as virus reservoirs.
+5. Keep field borders free from Abutilon, Solanum nigrum and other weed hosts.
+
+Resistance Note: Whiteflies have developed resistance to several insecticides. Rotate chemical classes between sprays. Do NOT use the same insecticide more than twice per season.
+
+Animal Safety: Observe a 14-day pre-grazing interval after imidacloprid application on cotton foliage.
+
+---
+
+Page 7
+
+GENERAL INTEGRATED PEST MANAGEMENT PRINCIPLES
+
+Water and Irrigation Management:
+- Irrigate at the base of plants near root zones to minimize leaf wetness.
+- Use drip or furrow irrigation instead of overhead sprinklers in disease-prone crops.
+- Irrigate early in the morning so foliage dries within 2 hours of sunrise.
+- Never irrigate in the evening — prolonged overnight leaf wetness greatly increases fungal risk.
+
+Fertilizer and Nutrition:
+- Apply balanced N-P-K based on soil test recommendations.
+- Excess nitrogen creates lush, succulent tissue that is more susceptible to fungal and bacterial diseases.
+- Adequate potassium improves cell wall strength and overall disease resistance.
+- Calcium and boron applications improve fruit quality and reduce blossom end rot in tomato.
+
+Crop Rotation Schedule:
+- Rotate solanaceous crops (tomato, potato, pepper, eggplant) with non-solanaceous crops for minimum 2 years.
+- Maize → Legume → Maize rotation reduces gray leaf spot inoculum by 60–80%.
+- Rice-wheat rotation is standard in north India and reduces rice blast pressure.
+
+Livestock and Pesticide Safety:
+- Withhold animals from treated areas for the stated pre-grazing interval (typically 7–21 days depending on pesticide).
+- Store pesticides in original labeled containers away from food, water sources, and animal areas.
+- Use personal protective equipment (gloves, mask, goggles) when mixing and applying any pesticide.
+- Wash hands and exposed skin thoroughly after any pesticide handling.
+- Never spray against the wind direction.
+
+Weather and Disease Risk:
+- High relative humidity (>80%) combined with temperatures of 20–28°C creates maximum risk for most fungal diseases.
+- Rainfall or heavy dew triggers rapid spore germination.
+- Apply protective contact fungicides before forecast rain periods exceeding 6 hours.
+- Reduce spray intervals from 10 to 5–7 days during sustained wet periods.
