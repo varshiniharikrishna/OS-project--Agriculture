@@ -8,11 +8,17 @@ import re
 import json
 import math
 import pickle
-import numpy as np
 from datetime import datetime
 from typing import List, Dict, Tuple, Optional
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+
+try:
+    import numpy as np
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import cosine_similarity
+    SKLEARN_AVAILABLE = True
+except (ImportError, Exception):
+    SKLEARN_AVAILABLE = False
+    np = None
 
 INDEX_DIR = os.path.join(os.path.dirname(__file__), "index")
 INDEX_PATH = os.path.join(INDEX_DIR, "rag_vector_index.pkl")
@@ -148,7 +154,7 @@ class RAGVectorStore:
         q_vec = self.vectorizer.transform([expanded_q])
         sims = cosine_similarity(q_vec, self.doc_vectors)[0]
         
-        top_indices = np.argsort(sims)[::-1]
+        top_indices = sorted(range(len(sims)), key=lambda i: sims[i], reverse=True)
         
         results = []
         seen_pages = set()
