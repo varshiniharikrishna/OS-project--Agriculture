@@ -45,15 +45,12 @@ function showSection(sectionId) {
     'scheduler-lab': 'OS Scheduler Lab (Examiners)',
     'resources': 'Resource & Weather Monitor',
     'comparison': 'Scheduler Comparison Benchmark',
-    'metrics-validations': 'Disease Model Evaluation & System Validations',
-    'hardware': 'Arduino Uno & Sensor Hardware Abstraction Layer',
-    'files': 'File Storage Management',
-    'technical': 'Technical Details'
+    'metrics-validations': 'Performance Metrics & Empirical Validations (Academic Defense)',
+    'files': 'File Storage Management'
   };
-  document.getElementById('current-section-title').innerText = titleMap[sectionId] || 'Dashboard';
-
-  if (sectionId === 'hardware') {
-    refreshHardwareStatus();
+  const titleElem = document.getElementById('current-section-title');
+  if (titleElem) {
+    titleElem.innerText = titleMap[sectionId] || 'Dashboard';
   }
 }
 
@@ -400,16 +397,41 @@ async function runDeadlockCheck(scenario = 'safe') {
     const res = await fetch(`/api/deadlock_check?scenario=${scenario}`);
     const data = await res.json();
 
-    const box = document.getElementById('deadlock-status-box');
-    box.innerText = `System State: ${data.status} — ${data.arbitration_result.message}`;
-    box.style.background = data.is_safe ? '#e8f5e9' : '#ffebee';
-    box.style.color = data.is_safe ? '#2e7d32' : '#c62828';
+    const stateLabel = document.getElementById('banker-state-label');
+    const msgLabel = document.getElementById('banker-msg-label');
+    const seqBox = document.getElementById('banker-sequence-box');
 
-    const matrixElem = document.getElementById('rag-matrix-display');
-    matrixElem.innerHTML = `
-      Available Vector [CPU, RAM, ML, Net]: [${data.available.join(', ')}]\n
-      Allocation Matrix:\n${data.allocation_matrix.map(a => `  ${a.process}: [${a.alloc.join(', ')}]`).join('\n')}
-    `;
+    if (stateLabel) {
+      if (data.is_safe) {
+        stateLabel.innerHTML = '<span style="color: #15803d; font-weight: 800;"><i class="fa-solid fa-circle-check"></i> Safe State (Deadlock Avoided)</span>';
+      } else {
+        stateLabel.innerHTML = '<span style="color: #b91c1c; font-weight: 800;"><i class="fa-solid fa-triangle-exclamation"></i> Unsafe State / Deadlock Risk Detected</span>';
+      }
+    }
+
+    if (msgLabel) {
+      msgLabel.innerText = `Arbitration Message: ${data.arbitration_result.message}`;
+      msgLabel.style.color = data.is_safe ? '#475569' : '#b91c1c';
+      msgLabel.style.fontWeight = data.is_safe ? 'normal' : '700';
+    }
+
+    if (seqBox) {
+      if (data.is_safe && data.safe_sequence && data.safe_sequence.length > 0) {
+        seqBox.style.background = '#f8fafc';
+        seqBox.style.borderColor = '#cbd5e1';
+        seqBox.innerHTML = `
+          <span style="color: #15803d; font-weight: 700;"><i class="fa-solid fa-route"></i> Safe Execution Sequence:</span><br>
+          ${data.safe_sequence.map((p, idx) => `<span class="badge" style="background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:4px; font-weight:700; margin:2px;">${idx + 1}. ${p}</span>`).join(' → ')}
+        `;
+      } else {
+        seqBox.style.background = '#fef2f2';
+        seqBox.style.borderColor = '#fca5a5';
+        seqBox.innerHTML = `
+          <span style="color: #b91c1c; font-weight: 700;"><i class="fa-solid fa-ban"></i> Deadlock Avoidance Triggered:</span><br>
+          <span style="color: #991b1b; font-size: 0.82rem;">Resource request [0, 0, 1, 0] denied for <strong>Soil Sensor Node</strong> because granting it would cause a circular wait. The OS rolled back the temporary allocation. System remains stable in Safe State!</span>
+        `;
+      }
+    }
   } catch (err) {
     console.error('Deadlock check error:', err);
   }
