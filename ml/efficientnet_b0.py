@@ -4,9 +4,18 @@ Natively defined using PyTorch nn modules (MBConv, Squeeze-and-Excitation, SiLU 
 """
 
 import math
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
+try:
+    import torch
+    import torch.nn as nn
+    import torch.nn.functional as F
+    TORCH_AVAILABLE = True
+    _BaseModule = nn.Module
+except (ImportError, Exception):
+    TORCH_AVAILABLE = False
+    torch = None
+    nn = None
+    F = None
+    _BaseModule = object
 
 # PlantVillage 38 Class Names
 PLANTVILLAGE_CLASSES = [
@@ -60,13 +69,13 @@ PLANTVILLAGE_CLASSES = [
 ]
 
 
-class Swish(nn.Module):
+class Swish(_BaseModule):
     """SiLU / Swish Activation function: x * sigmoid(x)."""
     def forward(self, x):
-        return x * torch.sigmoid(x)
+        return x * torch.sigmoid(x) if torch else x
 
 
-class SqueezeExcitation(nn.Module):
+class SqueezeExcitation(_BaseModule):
     """Squeeze-and-Excitation block for channel-wise attention."""
     def __init__(self, in_channels, reduced_dim):
         super(SqueezeExcitation, self).__init__()
@@ -82,7 +91,7 @@ class SqueezeExcitation(nn.Module):
         return x * self.se(x)
 
 
-class MBConvBlock(nn.Module):
+class MBConvBlock(_BaseModule):
     """Mobile Inverted Bottleneck Conv (MBConv) Block."""
     def __init__(self, in_channels, out_channels, kernel_size, stride, expand_ratio, se_ratio=0.25):
         super(MBConvBlock, self).__init__()
@@ -133,11 +142,13 @@ class MBConvBlock(nn.Module):
         return out
 
 
-class EfficientNetB0(nn.Module):
+class EfficientNetB0(_BaseModule):
     """EfficientNet-B0 Architecture for 38 PlantVillage Classes."""
     def __init__(self, num_classes=len(PLANTVILLAGE_CLASSES)):
         super(EfficientNetB0, self).__init__()
         self.model_name = "EfficientNet-B0"
+        if not TORCH_AVAILABLE:
+            return
 
         # Stem Conv
         self.stem = nn.Sequential(
@@ -187,11 +198,13 @@ class EfficientNetB0(nn.Module):
         return self.classifier(x)
 
 
-class ResNet50(nn.Module):
+class ResNet50(_BaseModule):
     """ResNet-50 Architecture Option for Model Comparison."""
     def __init__(self, num_classes=len(PLANTVILLAGE_CLASSES)):
         super(ResNet50, self).__init__()
         self.model_name = "ResNet-50"
+        if not TORCH_AVAILABLE:
+            return
         
         # Initial Conv Layer
         self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, bias=False)
