@@ -13,6 +13,23 @@ document.addEventListener('DOMContentLoaded', () => {
   loadDashboardData();
   changeLanguage('en');
   triggerSchedulerRun();
+
+  // Handle URL hash navigation on initial load (e.g., #section-metrics-validations)
+  if (window.location.hash) {
+    const sectionName = window.location.hash.replace('#section-', '').replace('#', '');
+    if (sectionName) {
+      showSection(sectionName);
+    }
+  }
+});
+
+window.addEventListener('hashchange', () => {
+  if (window.location.hash) {
+    const sectionName = window.location.hash.replace('#section-', '').replace('#', '');
+    if (sectionName) {
+      showSection(sectionName);
+    }
+  }
 });
 
 // --- Section Navigation ---
