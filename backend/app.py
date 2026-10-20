@@ -488,5 +488,15 @@ def validate_table7_api():
 
 
 if __name__ == '__main__':
-    print(f"Starting AgriEdge Intelligence Server on http://{HOST}:{PORT}")
-    app.run(host=HOST, port=PORT, debug=DEBUG)
+    target_port = int(os.environ.get("PORT", PORT))
+    print(f"\n🌱 Starting AgriEdge Intelligence Server on http://{HOST}:{target_port}")
+    try:
+        app.run(host=HOST, port=target_port, debug=DEBUG)
+    except OSError as e:
+        if "Address already in use" in str(e) or getattr(e, 'errno', 0) == 48:
+            fallback_port = 5050
+            print(f"\n[!] Port {target_port} is occupied (common on macOS AirPlay Receiver).")
+            print(f"    Switching automatically to fallback port: http://{HOST}:{fallback_port}")
+            app.run(host=HOST, port=fallback_port, debug=DEBUG)
+        else:
+            raise e

@@ -1,0 +1,13 @@
+{
+  "filename": "20261019_201548_leaf_sample.jpg",
+  "original_name": "leaf_sample.jpg",
+  "timestamp": "2026-10-19 20:15:48",
+  "status": "completed",
+  "crop": "Apple",
+  "device_id": "Edge-Camera-01",
+  "file_size_bytes": 1413,
+  "disease_prediction": "Apple scab",
+  "confidence": 78.5,
+  "severity": "Moderate",
+  "last_updated": "2026-10-19 20:15:48"
+}
