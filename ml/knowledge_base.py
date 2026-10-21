@@ -4,6 +4,71 @@ Prevents LLM hallucination by supplying verified agricultural management guidanc
 """
 
 KNOWLEDGE_BASE = {
+    "Pepper__bell___Bacterial_spot": {
+        "crop": "Bell Pepper (Capsicum)",
+        "disease": "Bacterial Spot (Xanthomonas campestris)",
+        "is_healthy": False,
+        "severity": "High",
+        "explanation": "Bacterial spot causes water-soaked spots on foliage that turn dark brown with yellow halos, causing premature defoliation and scarred fruit.",
+        "actions": [
+            "Apply copper bactericide combined with Mancozeb at first sign of symptoms.",
+            "Avoid overhead irrigation; use drip watering to keep foliage dry.",
+            "Remove and destroy severely infected pepper plants."
+        ],
+        "prevention": [
+            "Use certified pathogen-free bell pepper seeds.",
+            "Practice 2-year crop rotation with non-solanaceous crops.",
+            "Sterilize garden tools and stakes regularly."
+        ]
+    },
+    "Pepper__bell___healthy": {
+        "crop": "Bell Pepper (Capsicum)",
+        "disease": "Healthy Leaf",
+        "is_healthy": True,
+        "severity": "None",
+        "explanation": "Bell pepper canopy is vibrant green, firm, and completely free from bacterial or fungal lesions.",
+        "actions": [
+            "Maintain consistent drip irrigation and balanced nitrogen fertilization.",
+            "Continue periodic scouting every 5-7 days."
+        ],
+        "prevention": [
+            "Mulch around bases to suppress weeds and stabilize soil temperature.",
+            "Ensure good air movement between plant rows."
+        ]
+    },
+    "Tomato_Spider_mites_Two_spotted_spider_mite": {
+        "crop": "Tomato",
+        "disease": "Two-Spotted Spider Mites (Tetranychus urticae)",
+        "is_healthy": False,
+        "severity": "Moderate",
+        "explanation": "Spider mites pierce plant cells causing fine yellow stippling and visible webbing under dry, warm conditions.",
+        "actions": [
+            "Spray insecticidal soap, neem oil, or horticultural oil on undersides of leaves.",
+            "Introduce predatory mites (Phytoseiulus persimilis) as a biological control.",
+            "Increase humidity around plants if possible."
+        ],
+        "prevention": [
+            "Avoid excessive nitrogen that promotes tender foliage attractive to mites.",
+            "Routinely spray water on leaf undersides to dislodge dust and colonies."
+        ]
+    },
+    "Tomato__Target_Spot": {
+        "crop": "Tomato",
+        "disease": "Target Spot (Corynespora cassiicola)",
+        "is_healthy": False,
+        "severity": "Moderate",
+        "explanation": "Target spot forms brown lesions with light brown centers and dark concentric rings on leaves and fruit, thriving in warm, humid weather.",
+        "actions": [
+            "Apply fungicides containing Chlorothalonil or Azoxystrobin.",
+            "Prune lower suckers to improve canopy airflow.",
+            "Water at the base of plants."
+        ],
+        "prevention": [
+            "Maintain wide plant spacing (45-60 cm).",
+            "Eliminate solanaceous weeds near the field.",
+            "Incorporate crop debris post-harvest."
+        ]
+    },
     "Tomato___Early_blight": {
         "crop": "Tomato",
         "disease": "Early Blight (Alternaria solani)",
@@ -90,6 +155,23 @@ KNOWLEDGE_BASE = {
         ]
     },
     "Tomato___Tomato_Yellow_Leaf_Curl_Virus": {
+        "crop": "Tomato",
+        "disease": "Yellow Leaf Curl Virus (TYLCV)",
+        "is_healthy": False,
+        "severity": "Critical",
+        "explanation": "TYLCV is transmitted by whiteflies (Bemisia tabaci). Infected plants exhibit severe leaf curling, yellowing margins, stunting, and reduced fruit yield.",
+        "actions": [
+            "Control whitefly vectors using yellow sticky traps and neem oil spray.",
+            "Apply imidacloprid or insecticidal soap if whitefly density is high.",
+            "Rogue out and bury severely stunted viral plants."
+        ],
+        "prevention": [
+            "Use fine insect mesh nets over nursery beds.",
+            "Plant TYLCV-tolerant hybrid varieties.",
+            "Keep fields free from weed hosts."
+        ]
+    },
+    "Tomato__Tomato_YellowLeaf__Curl_Virus": {
         "crop": "Tomato",
         "disease": "Yellow Leaf Curl Virus (TYLCV)",
         "is_healthy": False,
@@ -424,11 +506,18 @@ def get_diagnosis(class_name: str) -> dict:
     """Retrieve controlled diagnosis and action plan for a given class label."""
     if class_name in KNOWLEDGE_BASE:
         return KNOWLEDGE_BASE[class_name]
+
+    # Smart normalized matching (handling Tomato_Bacterial_spot vs Tomato___Bacterial_spot)
+    clean_target = class_name.lower().replace("___", "_").replace("__", "_")
+    for k, v in KNOWLEDGE_BASE.items():
+        clean_k = k.lower().replace("___", "_").replace("__", "_")
+        if clean_target == clean_k:
+            return v
     
     # Generic fallback based on label parsing
-    parts = class_name.split("___")
-    crop = parts[0].replace("_", " ") if len(parts) > 0 else "Crop"
-    dis = parts[1].replace("_", " ") if len(parts) > 1 else "Condition"
+    parts = class_name.split("___") if "___" in class_name else class_name.split("_", 1)
+    crop = parts[0].replace("_", " ").strip() if len(parts) > 0 else "Crop"
+    dis = parts[1].replace("_", " ").strip() if len(parts) > 1 else "Condition"
     is_healthy = "healthy" in dis.lower()
     
     return {
